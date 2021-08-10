@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <meta charset="utf-8">
+    
+    <title>PHP的垃圾回收机制-回收周期 | Coding花园</title>
+    
+    
+        <meta name="keywords" content="PHP的垃圾回收机制-回收周期" />
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="回收周期(Collecting Cycles)传统上，像以前的 php 用到的引用计数内存机制，无法处理循环的引用内存泄漏。然而 5.3.0 PHP 使用文章» 引用计数系统中的同步周期回收(Concurrent Cycle Collection in Reference Counted Systems)中的同步算法，来处理这个内存泄漏问题。 对算法的完全说明有点超出这部分内容的范围，将只介绍其中">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PHP的垃圾回收机制-回收周期">
+<meta property="og:url" content="https://dd-code.site/post/1247192045.html">
+<meta property="og:site_name" content="Coding花园">
+<meta property="og:description" content="回收周期(Collecting Cycles)传统上，像以前的 php 用到的引用计数内存机制，无法处理循环的引用内存泄漏。然而 5.3.0 PHP 使用文章» 引用计数系统中的同步周期回收(Concurrent Cycle Collection in Reference Counted Systems)中的同步算法，来处理这个内存泄漏问题。 对算法的完全说明有点超出这部分内容的范围，将只介绍其中">
+<meta property="og:locale">
+<meta property="og:image" content="https://www.php.net/manual/zh/images/12f37b1c6963c1c5c18f30495416a197-gc-algorithm.png">
+<meta property="article:published_time" content="2021-07-26T03:23:17.287Z">
+<meta property="article:modified_time" content="2021-08-10T15:52:24.659Z">
+<meta property="article:author" content="Dawson Liu">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.php.net/manual/zh/images/12f37b1c6963c1c5c18f30495416a197-gc-algorithm.png">
+    
+
+    
+        <link rel="alternate" href="/atom.xml" title="Coding花园" type="application/atom+xml" />
+    
+
+    
+        <link rel="icon" href="/favicon.ico" />
+    
+
+    
+<link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+
+    
+<link rel="stylesheet" href="/libs/open-sans/styles.css">
+
+    
+<link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+
+    
+<script src="/libs/jquery/plugins/cookie/1.4.1/jquery.cookie.js"></script>
+
+    
+    
+        
+<link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+
+    
+    
+        
+<link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+
+    
+    
+    
+    
+
+
+    
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">Coding花园</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/">首页</a>
+                
+                    <a class="main-nav-link" href="/tags">标签</a>
+                
+                    <a class="main-nav-link" href="/archives">归档</a>
+                
+            </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="Type something..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/">首页</a></td>
+                
+                    <td><a class="main-nav-link" href="/tags">标签</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">归档</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+            
+                <aside id="sidebar">
+   
+        
+    <div class="widget-wrap" id='categories'>
+        <h3 class="widget-title">
+            <span>categories</span>
+            &nbsp;
+            <a id='allExpand' href="#">
+                <i class="fa fa-angle-double-down fa-2x"></i>
+            </a>
+        </h3>
+        
+        
+        
+         <ul class="unstyled" id="tree" > 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            分享收藏
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/2127643338.html">不错的在线学习平台</a></li>  <li class="file"><a href="/post/659461921.html">Go进阶训练营课程大纲学习体系</a></li>  <li class="file"><a href="/post/1891777730.html">高级 Go 工程师岗位职责</a></li>  <li class="file"><a href="/post/1354050835.html">豆瓣电影 Top250 榜单</a></li>  <li class="file"><a href="/post/2127643338.html">不错的在线学习平台</a></li>  <li class="file"><a href="/post/1628566266.html">优秀的博主站点</a></li>  <li class="file"><a href="/post/651811465.html">架构图模板</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            技术学习
+                        </a>
+                         <ul class="unstyled" id="tree" > 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            Docker
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/2104589309.html">Docker命令详解（run篇）</a></li>  <li class="file"><a href="/post/564644262.html">Docker相关命令</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            LeetCode
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/3220316175.html">一个很好地leetcode项目</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            Mongo
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/1691421171.html">mongo常用命令</a></li>  <li class="file"><a href="/post/1323723771.html">mongo数据库角色</a></li>  <li class="file"><a href="/post/3140326379.html">mongo新建用户</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            MySQL
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/4025057969.html">MyISAM和InnoDB的区别</a></li>  <li class="file"><a href="/post/748313607.html">MySQL优化</a></li>  <li class="file"><a href="/post/1213461122.html">MySQL千万级大数据量查询优化</a></li>  <li class="file"><a href="/post/1724192415.html">MySQL基础-小数类型</a></li>  <li class="file"><a href="/post/1988337205.html">MySQL基础-整数类型</a></li>  <li class="file"><a href="/post/445316081.html">MySQL常见问题</a></li>  <li class="file"><a href="/post/961775144.html">MySQL查询重复的数据</a></li>  <li class="file"><a href="/post/70487411.html">MySQL索引和存储引擎</a></li>  <li class="file"><a href="/post/548465112.html">MySQL索引失效情况</a></li>  <li class="file"><a href="/post/1647528259.html">MySQL索引类型</a></li>  <li class="file"><a href="/post/1868093003.html">事务的四个特性</a></li>  <li class="file"><a href="/post/2178661577.html">使用MySqlDump备份</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            Oracle
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/1452475922.html">Centos7下Oracle19c的安装</a></li>  <li class="file"><a href="/post/3032572741.html">docker安装oracle19c</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            Redis
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/295621084.html">Redis持久化</a></li>  <li class="file"><a href="/post/1349846639.html">Redis数据类型比较和使用场景</a></li>  <li class="file"><a href="/post/1685059487.html">Redis设置密码</a></li>  <li class="file"><a href="/post/1058490118.html">安装SSDB</a></li>  <li class="file"><a href="/post/1099414406.html">了解Redis</a></li>  <li class="file"><a href="/post/894376550.html">缓存Memcache和Redis的区别</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            Service
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/82110573.html">linux系统scp文件传输</a></li>  <li class="file"><a href="/post/1879866913.html">Ubuntu防火墙的使用和开放关闭端口</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            数据库
+                        </a>
+                         <ul class="unstyled" id="tree" > 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            Memcache
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/2253204330.html">了解Memcache</a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            算法
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/2235748871.html">冒泡排序解析</a></li>  <li class="file"><a href="/post/1591159457.html">c1</a></li>  <li class="file"><a href="/post/3516134866.html">国外一个学习算法很好的网站</a></li>  <li class="file"><a href="/post/1991213779.html">两两对比算法</a></li>  <li class="file"><a href="/post/2235748871.html">冒泡排序解析</a></li>  <li class="file"><a href="/post/1898961614.html">编码-冒泡排序</a></li>  <li class="file"><a href="/post/73634619.html">检查给定数组是否成对排序</a></li>  <li class="file"><a href="/post/2412115213.html">快速排序解析</a></li>  <li class="file"><a href="/post/570953535.html">编码-快排算法</a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            每日一课
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/2648367562.html">2019年必学的DevOps流行工具</a></li>  <li class="file"><a href="/post/3792249270.html">二维码扫描登录是什么原理</a></li>  <li class="file"><a href="/post/495014278.html">如何快速对应用系统做一个360度的画像诊断</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory open">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder-open"></i>
+                            &nbsp;
+                            编程语言
+                        </a>
+                         <ul class="unstyled" id="tree" > 
+                    <li class="directory open">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder-open"></i>
+                            &nbsp;
+                            PHP
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/1171510126.html">PHP-FPM是什么</a></li>  <li class="file"><a href="/post/4276646924.html">PHP-FPM的三种运行模式</a></li>  <li class="file"><a href="/post/2140386669.html">PHP 中self、static、$this的区别&后期静态绑定详解</a></li>  <li class="file"><a href="/post/886155297.html">PHP基础-数据类型-boolean</a></li>  <li class="file"><a href="/post/4235469996.html">PHP基础-数据类型-float</a></li>  <li class="file"><a href="/post/3247369179.html">PHP基础-数据类型-string</a></li>  <li class="file"><a href="/post/221785719.html">PHP基础-数据类型-integet</a></li>  <li class="file"><a href="/post/740536292.html">PHP基础-数据类型-string和int比较</a></li>  <li class="file"><a href="/post/2518559853.html">PHP基础-数据类型</a></li>  <li class="file"><a href="/post/1503101483.html">PHP字符串函数</a></li>  <li class="file"><a href="/post/2916108243.html">PHP控制反转（IOC）和依赖注入（DI）</a></li>  <li class="file active"><a href="/post/1247192045.html">PHP的垃圾回收机制-回收周期</a></li>  <li class="file"><a href="/post/2776614029.html">PHP的垃圾回收机制-引用计数</a></li>  <li class="file"><a href="/post/2943915566.html">PHP的垃圾回收机制-性能方面考虑的因素</a></li>  <li class="file"><a href="/post/512206887.html">PHP的垃圾回收机制</a></li>  <li class="file"><a href="/post/3981571320.html">PHP自动加载机制</a></li>  <li class="file"><a href="/post/137484498.html">self和$this的区别</a></li>  <li class="file"><a href="/post/2844724790.html">在Mac上使用Homebrew升级到PHP7.4</a></li>  <li class="file"><a href="/post/3712615104.html">如何使用brew安装多个PHP版本</a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            自考提升
+                        </a>
+                         <ul class="unstyled" id="tree" > 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            网络经济与企业管理
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/701979186.html">《网络经济与企业管理》第一次课</a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            课程学习
+                        </a>
+                         <ul class="unstyled" id="tree" > 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            22讲通关Go语言
+                        </a>
+                         <ul class="unstyled" id="tree" > 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            00-开篇词
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/188254796.html">开篇词</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            01-Go语言快速入门
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/1719467524.html">01 | 基础入门：编写你的第一个 Go 语言程序</a></li>  <li class="file"><a href="/post/239718908.html">04 | 数据类型：查找字符串</a></li>  <li class="file"><a href="/post/3069556377.html">03 | 数据类型：字符串和数字</a></li>  <li class="file"><a href="/post/2755664247.html">02 | 数据类型：变量的声明</a></li>  <li class="file"><a href="/post/1632346433.html">05 | 控制结构：If 条件语句</a></li>  <li class="file"><a href="/post/1946029743.html">06 | 控制结构：switch 选择语句</a></li>  <li class="file"><a href="/post/3410127306.html">07 | 控制结构：for 循环语句</a></li>  <li class="file"><a href="/post/1956865009.html">08 | 集合类型：Array（数组）</a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            廖雪峰的Java教程
+                        </a>
+                         <ul class="unstyled" id="tree" > 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            00-开篇词
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/188254797.html">开篇词</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            01-Java基础
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/2622184687.html">01|Java简介</a></li>  <li class="file"><a href="/post/3342559509.html">02|第一个Java程序</a></li>  <li class="file"><a href="/post/3119976000.html">03|Java程序基本结构</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            02-基本数据类型
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/860253879.html">01|变量和数据类型</a></li>  <li class="file"><a href="/post/117828488.html">02|基本数据类型的说明</a></li>  <li class="file"><a href="/post/3158030992.html">04|浮点型</a></li>  <li class="file"><a href="/post/3819373199.html">06|字符类型</a></li>  <li class="file"><a href="/post/2916864214.html">07|引用类型和常量</a></li>  <li class="file"><a href="/post/677245709.html">05|布尔类型</a></li>  <li class="file"><a href="/post/3232286694.html">03|整型</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            03-运算
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/2897062313.html">01|整数运算</a></li>  <li class="file"><a href="/post/2719730562.html">02|浮点数运算</a></li>  <li class="file"><a href="/post/1318299933.html">03|布尔运算</a></li>  <li class="file"><a href="/post/709319275.html">04|字符和字符串</a></li>  <li class="file"><a href="/post/3940022775.html">05|数组类型</a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                     </ul> 
+    </div>
+    <script>
+        $(document).ready(function() {
+            var iconFolderOpenClass  = 'fa-folder-open';
+            var iconFolderCloseClass = 'fa-folder';
+            var iconAllExpandClass = 'fa-angle-double-down';
+            var iconAllPackClass = 'fa-angle-double-up';
+            // Handle directory-tree expansion:
+            // 左键单独展开目录
+            $(document).on('click', '#categories a[data-role="directory"]', function (event) {
+                event.preventDefault();
+
+                var icon = $(this).children('.fa');
+                var expanded = icon.hasClass(iconFolderOpenClass);
+                var subtree = $(this).siblings('ul');
+                icon.removeClass(iconFolderOpenClass).removeClass(iconFolderCloseClass);
+                if (expanded) {
+                    if (typeof subtree != 'undefined') {
+                        subtree.slideUp({ duration: 100 });
+                    }
+                    icon.addClass(iconFolderCloseClass);
+                } else {
+                    if (typeof subtree != 'undefined') {
+                        subtree.slideDown({ duration: 100 });
+                    }
+                    icon.addClass(iconFolderOpenClass);
+                }
+            });
+            // 右键展开下属所有目录
+            $('#categories a[data-role="directory"]').bind("contextmenu", function(event){
+                event.preventDefault();
+                
+                var icon = $(this).children('.fa');
+                var expanded = icon.hasClass(iconFolderOpenClass);
+                var listNode = $(this).siblings('ul');
+                var subtrees = $.merge(listNode.find('li ul'), listNode);
+                var icons = $.merge(listNode.find('.fa'), icon);
+                icons.removeClass(iconFolderOpenClass).removeClass(iconFolderCloseClass);
+                if(expanded) {
+                    subtrees.slideUp({ duration: 100 });
+                    icons.addClass(iconFolderCloseClass);
+                } else {
+                    subtrees.slideDown({ duration: 100 });
+                    icons.addClass(iconFolderOpenClass);
+                }
+            })
+            // 展开关闭所有目录按钮
+            $(document).on('click', '#allExpand', function (event) {
+                event.preventDefault();
+                
+                var icon = $(this).children('.fa');
+                var expanded = icon.hasClass(iconAllExpandClass);
+                icon.removeClass(iconAllExpandClass).removeClass(iconAllPackClass);
+                if(expanded) {
+                    $('#sidebar .fa.fa-folder').removeClass('fa-folder').addClass('fa-folder-open')
+                    $('#categories li ul').slideDown({ duration: 100 });
+                    icon.addClass(iconAllPackClass);
+                } else {
+                    $('#sidebar .fa.fa-folder-open').removeClass('fa-folder-open').addClass('fa-folder')
+                    $('#categories li ul').slideUp({ duration: 100 });
+                    icon.addClass(iconAllExpandClass);
+                }
+            });  
+        });
+    </script>
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+            
+            <section id="main"><article id="post-编程语言/PHP/PHP的垃圾回收机制-回收周期" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+                    <div class="article-meta">
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/">编程语言</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/PHP/">PHP</a>
+    </div>
+
+                        
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/post/1247192045.html">
+            <time datetime="2021-07-26T03:23:17.287Z" itemprop="datePublished">2021-07-26</time>
+        </a>
+    </div>
+
+
+                        
+                            <i class="fa fa-bar-chart"></i>
+                            <span id="busuanzi_container_site_pv"><span id="busuanzi_value_page_pv"></span></span>    
+                        
+                        
+                            <div class="article-meta-button">
+                                <a target="_blank" rel="noopener" href='https://github.com/dd-code-site/blog/raw/main/source/_posts/编程语言/PHP/PHP的垃圾回收机制-回收周期.md'> Source </a>
+                            </div>
+                            <div class="article-meta-button">
+                                <a target="_blank" rel="noopener" href='https://github.com/dd-code-site/blog/edit/main/source/_posts/编程语言/PHP/PHP的垃圾回收机制-回收周期.md'> Edit </a>
+                            </div>
+                            <div class="article-meta-button">
+                                <a target="_blank" rel="noopener" href='https://github.com/dd-code-site/blog/commits/main/source/_posts/编程语言/PHP/PHP的垃圾回收机制-回收周期.md'> History </a>
+                            </div>
+                        
+                    </div>
+                
+                
+    
+        <h1 class="article-title" itemprop="name">
+            PHP的垃圾回收机制-回收周期
+        </h1>
+    
+
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+        
+            
+        
+        
+            <h2 id="回收周期-Collecting-Cycles"><a href="#回收周期-Collecting-Cycles" class="headerlink" title="回收周期(Collecting Cycles)"></a>回收周期(Collecting Cycles)</h2><p>传统上，像以前的 php 用到的引用计数内存机制，无法处理循环的引用内存泄漏。然而 5.3.0 PHP 使用文章<a target="_blank" rel="noopener" href="http://researcher.watson.ibm.com/researcher/files/us-bacon/Bacon01Concurrent.pdf">» 引用计数系统中的同步周期回收(Concurrent Cycle Collection in Reference Counted Systems)</a>中的同步算法，来处理这个内存泄漏问题。</p>
+<p>对算法的完全说明有点超出这部分内容的范围，将只介绍其中基础部分。首先，我们先要建立一些基本规则，如果一个引用计数增加，它将继续被使用，当然就不再在垃圾中。如果引用计数减少到零，所在变量容器将被清除(free)。就是说，仅仅在引用计数减少到非零值时，才会产生垃圾周期(garbage cycle)。其次，在一个垃圾周期中，通过检查引用计数是否减1，并且检查哪些变量容器的引用次数是零，来发现哪部分是垃圾。</p>
+<p><img src="https://www.php.net/manual/zh/images/12f37b1c6963c1c5c18f30495416a197-gc-algorithm.png" alt="垃圾回收算法"></p>
+<p>为避免不得不检查所有引用计数可能减少的垃圾周期，这个算法把所有可能根(possible roots 都是zval变量容器),放在根缓冲区(root buffer)中(用紫色来标记，称为疑似垃圾)，这样可以同时确保每个可能的垃圾根(possible garbage root)在缓冲区中只出现一次。仅仅在根缓冲区满了时，才对缓冲区内部所有不同的变量容器执行垃圾回收操作。看上图的步骤 A。</p>
+<p>在步骤 B 中，模拟删除每个紫色变量。模拟删除时可能将不是紫色的普通变量引用数减”1”，如果某个普通变量引用计数变成0了，就对这个普通变量再做一次模拟删除。每个变量只能被模拟删除一次，模拟删除后标记为灰（原文说确保不会对同一个变量容器减两次”1”,不对的吧）。</p>
+<p>在步骤 C 中，模拟恢复每个紫色变量。恢复是有条件的，当变量的引用计数大于0时才对其做模拟恢复。同样每个变量只能恢复一次，恢复后标记为黑，基本就是步骤 B 的逆运算。这样剩下的一堆没能恢复的就是该删除的蓝色节点了，在步骤 D 中遍历出来真的删除掉。</p>
+<p>算法中都是模拟删除、模拟恢复、真的删除，都使用简单的遍历即可（最典型的深搜遍历）。复杂度为执行模拟操作的节点数正相关，不只是紫色的那些疑似垃圾变量。</p>
+<p>现在，你已经对这个算法有了基本了解，我们回头来看这个如何与PHP集成。默认的，PHP的垃圾回收机制是打开的，然后有个 php.ini 设置允许你修改它：<strong>zend.enable_gc</strong>。</p>
+<p>当垃圾回收机制打开时，每当根缓存区存满时，就会执行上面描述的循环查找算法。根缓存区有固定的大小，可存10,000个可能根,当然你可以通过修改PHP源码文件<code>Zend/zend_gc.c</code>中的常量<code>GC_ROOT_BUFFER_MAX_ENTRIES</code>，然后重新编译PHP，来修改这个10,000值。当垃圾回收机制关闭时，循环查找算法永不执行，然而，可能根将一直存在根缓冲区中，不管在配置中垃圾回收机制是否激活。</p>
+<p>当垃圾回收机制关闭时，如果根缓冲区存满了可能根，更多的可能根显然不会被记录。那些没被记录的可能根，将不会被这个算法来分析处理。如果他们是循环引用周期的一部分，将永不能被清除进而导致内存泄漏。</p>
+<p>即使在垃圾回收机制不可用时，可能根也被记录的原因是，相对于每次找到可能根后检查垃圾回收机制是否打开而言，记录可能根的操作更快。不过垃圾回收和分析机制本身要耗不少时间。</p>
+<p>除了修改配置<strong>zend.enable_gc</strong>，也能通过分别调用<a target="_blank" rel="noopener" href="https://www.php.net/manual/zh/function.gc-enable.php">gc_enable()</a> 和 <a target="_blank" rel="noopener" href="https://www.php.net/manual/zh/function.gc-disable.php">gc_disable()</a>函数来打开和关闭垃圾回收机制。调用这些函数，与修改配置项来打开或关闭垃圾回收机制的效果是一样的。即使在可能根缓冲区还没满时，也能强制执行周期回收。你能调用<a target="_blank" rel="noopener" href="https://www.php.net/manual/zh/function.gc-collect-cycles.php">gc_collect_cycles()</a>函数达到这个目的。这个函数将返回使用这个算法回收的周期数。</p>
+<p>允许打开和关闭垃圾回收机制并且允许自主的初始化的原因，是由于你的应用程序的某部分可能是高时效性的。在这种情况下，你可能不想使用垃圾回收机制。当然，对你的应用程序的某部分关闭垃圾回收机制，是在冒着可能内存泄漏的风险，因为一些可能根也许存不进有限的根缓冲区。因此，就在你调用<a target="_blank" rel="noopener" href="https://www.php.net/manual/zh/function.gc-disable.php">gc_disable()</a>函数释放内存之前，先调用<a target="_blank" rel="noopener" href="https://www.php.net/manual/zh/function.gc-collect-cycles.php">gc_collect_cycles()</a>函数可能比较明智。因为这将清除已存放在根缓冲区中的所有可能根，然后在垃圾回收机制被关闭时，可留下空缓冲区以有更多空间存储可能根。</p>
+
+            </div>
+        
+        <footer class="article-footer">
+        </footer>
+    </div>
+</article>
+
+
+    
+<nav id="article-nav">
+    
+        <a href="/post/2916108243.html" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">Newer</strong>
+            <div class="article-nav-title">
+                
+                    PHP控制反转（IOC）和依赖注入（DI）
+                
+            </div>
+        </a>
+    
+    
+        <a href="/post/740536292.html" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">Older</strong>
+            <div class="article-nav-title">PHP基础-数据类型-string和int比较</div>
+        </a>
+    
+</nav>
+
+
+
+
+
+    
+    
+
+
+
+
+<!-- baidu url auto push script -->
+<script type="text/javascript">
+    !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=window.location.href,o=document.referrer;if(!e.test(r)){var n="//api.share.baidu.com/s.gif";o?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var t=new Image;t.src=n}}(window);
+</script>     
+</section>
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            Dawson Liu &copy; 2021 
+            <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/80x15.png" /></a>
+            <br> Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme - <a target="_blank" rel="noopener" href="https://github.com/zthxxx/hexo-theme-Wikitten">wikitten</a>
+            
+                <br>
+                <span id="busuanzi_container_site_pv"><i class="fa fa-eye"></i> <span id="busuanzi_value_site_pv"></span></span>
+                &nbsp;|&nbsp;
+                <span id="busuanzi_container_site_pv"><i class="fa fa-user"></i> <span id="busuanzi_value_site_uv"></span></span>
+            
+        </div>
+    </div>
+</footer>
+
+        
+
+    
+        
+<script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-share.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-video.min.js"></script>
+
+    
+    
+        
+<script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+
+    
+    
+        <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true,
+            TeX: {
+                equationNumbers: {
+                  autoNumber: 'AMS'
+                }
+            }
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script async src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+
+<script src="/js/main.js"></script>
+
+
+    </div>
+</body>
+</html>

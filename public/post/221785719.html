@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <meta charset="utf-8">
+    
+    <title>PHP基础-数据类型-integet | Coding花园</title>
+    
+    
+        <meta name="keywords" content="PHP基础-数据类型-integet" />
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="integer 是集合 ℤ &#x3D; {…, -2, -1, 0, 1, 2, …} 中的某个数。  语法整型值可以使用十进制，十六进制，八进制或二进制表示，前面可以加上可选的符号（- 或者 +）。 可以用 负运算符 来表示一个负的integer。 二进制表达的 integer 自 PHP 5.4.0 起可用。 要使用八进制表达，数字前必须加上 0（零）。要使用十六进制表达，数字前必须加上 0x。要使">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PHP基础-数据类型-integet">
+<meta property="og:url" content="https://dd-code.site/post/221785719.html">
+<meta property="og:site_name" content="Coding花园">
+<meta property="og:description" content="integer 是集合 ℤ &#x3D; {…, -2, -1, 0, 1, 2, …} 中的某个数。  语法整型值可以使用十进制，十六进制，八进制或二进制表示，前面可以加上可选的符号（- 或者 +）。 可以用 负运算符 来表示一个负的integer。 二进制表达的 integer 自 PHP 5.4.0 起可用。 要使用八进制表达，数字前必须加上 0（零）。要使用十六进制表达，数字前必须加上 0x。要使">
+<meta property="og:locale">
+<meta property="article:published_time" content="2021-07-26T03:23:17.285Z">
+<meta property="article:modified_time" content="2021-08-10T15:52:24.851Z">
+<meta property="article:author" content="Dawson Liu">
+<meta name="twitter:card" content="summary">
+    
+
+    
+        <link rel="alternate" href="/atom.xml" title="Coding花园" type="application/atom+xml" />
+    
+
+    
+        <link rel="icon" href="/favicon.ico" />
+    
+
+    
+<link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+
+    
+<link rel="stylesheet" href="/libs/open-sans/styles.css">
+
+    
+<link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+
+    
+<script src="/libs/jquery/plugins/cookie/1.4.1/jquery.cookie.js"></script>
+
+    
+    
+        
+<link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+
+    
+    
+        
+<link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+
+    
+    
+    
+    
+
+
+    
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">Coding花园</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/">首页</a>
+                
+                    <a class="main-nav-link" href="/tags">标签</a>
+                
+                    <a class="main-nav-link" href="/archives">归档</a>
+                
+            </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="Type something..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/">首页</a></td>
+                
+                    <td><a class="main-nav-link" href="/tags">标签</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">归档</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+            
+                <aside id="sidebar">
+   
+        
+    <div class="widget-wrap" id='categories'>
+        <h3 class="widget-title">
+            <span>categories</span>
+            &nbsp;
+            <a id='allExpand' href="#">
+                <i class="fa fa-angle-double-down fa-2x"></i>
+            </a>
+        </h3>
+        
+        
+        
+         <ul class="unstyled" id="tree" > 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            分享收藏
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/2127643338.html">不错的在线学习平台</a></li>  <li class="file"><a href="/post/659461921.html">Go进阶训练营课程大纲学习体系</a></li>  <li class="file"><a href="/post/1891777730.html">高级 Go 工程师岗位职责</a></li>  <li class="file"><a href="/post/1354050835.html">豆瓣电影 Top250 榜单</a></li>  <li class="file"><a href="/post/2127643338.html">不错的在线学习平台</a></li>  <li class="file"><a href="/post/1628566266.html">优秀的博主站点</a></li>  <li class="file"><a href="/post/651811465.html">架构图模板</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            技术学习
+                        </a>
+                         <ul class="unstyled" id="tree" > 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            Docker
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/2104589309.html">Docker命令详解（run篇）</a></li>  <li class="file"><a href="/post/564644262.html">Docker相关命令</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            LeetCode
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/3220316175.html">一个很好地leetcode项目</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            Mongo
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/1691421171.html">mongo常用命令</a></li>  <li class="file"><a href="/post/1323723771.html">mongo数据库角色</a></li>  <li class="file"><a href="/post/3140326379.html">mongo新建用户</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            MySQL
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/4025057969.html">MyISAM和InnoDB的区别</a></li>  <li class="file"><a href="/post/748313607.html">MySQL优化</a></li>  <li class="file"><a href="/post/1213461122.html">MySQL千万级大数据量查询优化</a></li>  <li class="file"><a href="/post/1724192415.html">MySQL基础-小数类型</a></li>  <li class="file"><a href="/post/1988337205.html">MySQL基础-整数类型</a></li>  <li class="file"><a href="/post/445316081.html">MySQL常见问题</a></li>  <li class="file"><a href="/post/961775144.html">MySQL查询重复的数据</a></li>  <li class="file"><a href="/post/70487411.html">MySQL索引和存储引擎</a></li>  <li class="file"><a href="/post/548465112.html">MySQL索引失效情况</a></li>  <li class="file"><a href="/post/1647528259.html">MySQL索引类型</a></li>  <li class="file"><a href="/post/1868093003.html">事务的四个特性</a></li>  <li class="file"><a href="/post/2178661577.html">使用MySqlDump备份</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            Oracle
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/1452475922.html">Centos7下Oracle19c的安装</a></li>  <li class="file"><a href="/post/3032572741.html">docker安装oracle19c</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            Redis
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/295621084.html">Redis持久化</a></li>  <li class="file"><a href="/post/1349846639.html">Redis数据类型比较和使用场景</a></li>  <li class="file"><a href="/post/1685059487.html">Redis设置密码</a></li>  <li class="file"><a href="/post/1058490118.html">安装SSDB</a></li>  <li class="file"><a href="/post/1099414406.html">了解Redis</a></li>  <li class="file"><a href="/post/894376550.html">缓存Memcache和Redis的区别</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            Service
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/82110573.html">linux系统scp文件传输</a></li>  <li class="file"><a href="/post/1879866913.html">Ubuntu防火墙的使用和开放关闭端口</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            数据库
+                        </a>
+                         <ul class="unstyled" id="tree" > 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            Memcache
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/2253204330.html">了解Memcache</a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            算法
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/2235748871.html">冒泡排序解析</a></li>  <li class="file"><a href="/post/1591159457.html">c1</a></li>  <li class="file"><a href="/post/3516134866.html">国外一个学习算法很好的网站</a></li>  <li class="file"><a href="/post/1991213779.html">两两对比算法</a></li>  <li class="file"><a href="/post/2235748871.html">冒泡排序解析</a></li>  <li class="file"><a href="/post/1898961614.html">编码-冒泡排序</a></li>  <li class="file"><a href="/post/73634619.html">检查给定数组是否成对排序</a></li>  <li class="file"><a href="/post/2412115213.html">快速排序解析</a></li>  <li class="file"><a href="/post/570953535.html">编码-快排算法</a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            每日一课
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/2648367562.html">2019年必学的DevOps流行工具</a></li>  <li class="file"><a href="/post/3792249270.html">二维码扫描登录是什么原理</a></li>  <li class="file"><a href="/post/495014278.html">如何快速对应用系统做一个360度的画像诊断</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory open">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder-open"></i>
+                            &nbsp;
+                            编程语言
+                        </a>
+                         <ul class="unstyled" id="tree" > 
+                    <li class="directory open">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder-open"></i>
+                            &nbsp;
+                            PHP
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/1171510126.html">PHP-FPM是什么</a></li>  <li class="file"><a href="/post/4276646924.html">PHP-FPM的三种运行模式</a></li>  <li class="file"><a href="/post/2140386669.html">PHP 中self、static、$this的区别&后期静态绑定详解</a></li>  <li class="file"><a href="/post/886155297.html">PHP基础-数据类型-boolean</a></li>  <li class="file"><a href="/post/4235469996.html">PHP基础-数据类型-float</a></li>  <li class="file"><a href="/post/3247369179.html">PHP基础-数据类型-string</a></li>  <li class="file active"><a href="/post/221785719.html">PHP基础-数据类型-integet</a></li>  <li class="file"><a href="/post/740536292.html">PHP基础-数据类型-string和int比较</a></li>  <li class="file"><a href="/post/2518559853.html">PHP基础-数据类型</a></li>  <li class="file"><a href="/post/1503101483.html">PHP字符串函数</a></li>  <li class="file"><a href="/post/2916108243.html">PHP控制反转（IOC）和依赖注入（DI）</a></li>  <li class="file"><a href="/post/1247192045.html">PHP的垃圾回收机制-回收周期</a></li>  <li class="file"><a href="/post/2776614029.html">PHP的垃圾回收机制-引用计数</a></li>  <li class="file"><a href="/post/2943915566.html">PHP的垃圾回收机制-性能方面考虑的因素</a></li>  <li class="file"><a href="/post/512206887.html">PHP的垃圾回收机制</a></li>  <li class="file"><a href="/post/3981571320.html">PHP自动加载机制</a></li>  <li class="file"><a href="/post/137484498.html">self和$this的区别</a></li>  <li class="file"><a href="/post/2844724790.html">在Mac上使用Homebrew升级到PHP7.4</a></li>  <li class="file"><a href="/post/3712615104.html">如何使用brew安装多个PHP版本</a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            自考提升
+                        </a>
+                         <ul class="unstyled" id="tree" > 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            网络经济与企业管理
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/701979186.html">《网络经济与企业管理》第一次课</a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            课程学习
+                        </a>
+                         <ul class="unstyled" id="tree" > 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            22讲通关Go语言
+                        </a>
+                         <ul class="unstyled" id="tree" > 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            00-开篇词
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/188254796.html">开篇词</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            01-Go语言快速入门
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/1719467524.html">01 | 基础入门：编写你的第一个 Go 语言程序</a></li>  <li class="file"><a href="/post/239718908.html">04 | 数据类型：查找字符串</a></li>  <li class="file"><a href="/post/3069556377.html">03 | 数据类型：字符串和数字</a></li>  <li class="file"><a href="/post/2755664247.html">02 | 数据类型：变量的声明</a></li>  <li class="file"><a href="/post/1632346433.html">05 | 控制结构：If 条件语句</a></li>  <li class="file"><a href="/post/1946029743.html">06 | 控制结构：switch 选择语句</a></li>  <li class="file"><a href="/post/3410127306.html">07 | 控制结构：for 循环语句</a></li>  <li class="file"><a href="/post/1956865009.html">08 | 集合类型：Array（数组）</a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            廖雪峰的Java教程
+                        </a>
+                         <ul class="unstyled" id="tree" > 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            00-开篇词
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/188254797.html">开篇词</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            01-Java基础
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/2622184687.html">01|Java简介</a></li>  <li class="file"><a href="/post/3342559509.html">02|第一个Java程序</a></li>  <li class="file"><a href="/post/3119976000.html">03|Java程序基本结构</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            02-基本数据类型
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/860253879.html">01|变量和数据类型</a></li>  <li class="file"><a href="/post/117828488.html">02|基本数据类型的说明</a></li>  <li class="file"><a href="/post/3158030992.html">04|浮点型</a></li>  <li class="file"><a href="/post/3819373199.html">06|字符类型</a></li>  <li class="file"><a href="/post/2916864214.html">07|引用类型和常量</a></li>  <li class="file"><a href="/post/677245709.html">05|布尔类型</a></li>  <li class="file"><a href="/post/3232286694.html">03|整型</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            03-运算
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/2897062313.html">01|整数运算</a></li>  <li class="file"><a href="/post/2719730562.html">02|浮点数运算</a></li>  <li class="file"><a href="/post/1318299933.html">03|布尔运算</a></li>  <li class="file"><a href="/post/709319275.html">04|字符和字符串</a></li>  <li class="file"><a href="/post/3940022775.html">05|数组类型</a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                     </ul> 
+    </div>
+    <script>
+        $(document).ready(function() {
+            var iconFolderOpenClass  = 'fa-folder-open';
+            var iconFolderCloseClass = 'fa-folder';
+            var iconAllExpandClass = 'fa-angle-double-down';
+            var iconAllPackClass = 'fa-angle-double-up';
+            // Handle directory-tree expansion:
+            // 左键单独展开目录
+            $(document).on('click', '#categories a[data-role="directory"]', function (event) {
+                event.preventDefault();
+
+                var icon = $(this).children('.fa');
+                var expanded = icon.hasClass(iconFolderOpenClass);
+                var subtree = $(this).siblings('ul');
+                icon.removeClass(iconFolderOpenClass).removeClass(iconFolderCloseClass);
+                if (expanded) {
+                    if (typeof subtree != 'undefined') {
+                        subtree.slideUp({ duration: 100 });
+                    }
+                    icon.addClass(iconFolderCloseClass);
+                } else {
+                    if (typeof subtree != 'undefined') {
+                        subtree.slideDown({ duration: 100 });
+                    }
+                    icon.addClass(iconFolderOpenClass);
+                }
+            });
+            // 右键展开下属所有目录
+            $('#categories a[data-role="directory"]').bind("contextmenu", function(event){
+                event.preventDefault();
+                
+                var icon = $(this).children('.fa');
+                var expanded = icon.hasClass(iconFolderOpenClass);
+                var listNode = $(this).siblings('ul');
+                var subtrees = $.merge(listNode.find('li ul'), listNode);
+                var icons = $.merge(listNode.find('.fa'), icon);
+                icons.removeClass(iconFolderOpenClass).removeClass(iconFolderCloseClass);
+                if(expanded) {
+                    subtrees.slideUp({ duration: 100 });
+                    icons.addClass(iconFolderCloseClass);
+                } else {
+                    subtrees.slideDown({ duration: 100 });
+                    icons.addClass(iconFolderOpenClass);
+                }
+            })
+            // 展开关闭所有目录按钮
+            $(document).on('click', '#allExpand', function (event) {
+                event.preventDefault();
+                
+                var icon = $(this).children('.fa');
+                var expanded = icon.hasClass(iconAllExpandClass);
+                icon.removeClass(iconAllExpandClass).removeClass(iconAllPackClass);
+                if(expanded) {
+                    $('#sidebar .fa.fa-folder').removeClass('fa-folder').addClass('fa-folder-open')
+                    $('#categories li ul').slideDown({ duration: 100 });
+                    icon.addClass(iconAllPackClass);
+                } else {
+                    $('#sidebar .fa.fa-folder-open').removeClass('fa-folder-open').addClass('fa-folder')
+                    $('#categories li ul').slideUp({ duration: 100 });
+                    icon.addClass(iconAllExpandClass);
+                }
+            });  
+        });
+    </script>
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+            
+            <section id="main"><article id="post-编程语言/PHP/PHP基础-数据类型-integet" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+                    <div class="article-meta">
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/">编程语言</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/PHP/">PHP</a>
+    </div>
+
+                        
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/post/221785719.html">
+            <time datetime="2021-07-26T03:23:17.285Z" itemprop="datePublished">2021-07-26</time>
+        </a>
+    </div>
+
+
+                        
+                            <i class="fa fa-bar-chart"></i>
+                            <span id="busuanzi_container_site_pv"><span id="busuanzi_value_page_pv"></span></span>    
+                        
+                        
+                            <div class="article-meta-button">
+                                <a target="_blank" rel="noopener" href='https://github.com/dd-code-site/blog/raw/main/source/_posts/编程语言/PHP/PHP基础-数据类型-integet.md'> Source </a>
+                            </div>
+                            <div class="article-meta-button">
+                                <a target="_blank" rel="noopener" href='https://github.com/dd-code-site/blog/edit/main/source/_posts/编程语言/PHP/PHP基础-数据类型-integet.md'> Edit </a>
+                            </div>
+                            <div class="article-meta-button">
+                                <a target="_blank" rel="noopener" href='https://github.com/dd-code-site/blog/commits/main/source/_posts/编程语言/PHP/PHP基础-数据类型-integet.md'> History </a>
+                            </div>
+                        
+                    </div>
+                
+                
+    
+        <h1 class="article-title" itemprop="name">
+            PHP基础-数据类型-integet
+        </h1>
+    
+
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+        
+            
+        
+        
+            <blockquote>
+<p>integer 是集合 ℤ = {…, -2, -1, 0, 1, 2, …} 中的某个数。</p>
+</blockquote>
+<h2 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h2><p>整型值可以使用十进制，十六进制，八进制或二进制表示，前面可以加上可选的符号（- 或者 +）。 可以用 <a target="_blank" rel="noopener" href="https://www.php.net/manual/zh/language.operators.arithmetic.php">负运算符</a> 来表示一个负的integer。</p>
+<p>二进制表达的 integer 自 PHP 5.4.0 起可用。</p>
+<p>要使用八进制表达，数字前必须加上 <code>0</code>（零）。要使用十六进制表达，数字前必须加上 <code>0x</code>。要使用二进制表达，数字前必须加上 <code>0b</code>。</p>
+<p>从 PHP 7.4.0 开始，整型数值可能会包含下划线 (<code>_</code>)，为了更好的阅读体验，这些下划线在展示的时候，会被 PHP 过滤掉。</p>
+<h3 id="Example-1-整数文字表达"><a href="#Example-1-整数文字表达" class="headerlink" title="Example #1 整数文字表达"></a><strong>Example #1 整数文字表达</strong></h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="variable">$a</span> = <span class="number">1234</span>; <span class="comment">// 十进制数</span></span><br><span class="line"><span class="variable">$a</span> = <span class="number">0123</span>; <span class="comment">// 八进制数 (等于十进制 83)</span></span><br><span class="line"><span class="variable">$a</span> = <span class="number">0x1A</span>; <span class="comment">// 十六进制数 (等于十进制 26)</span></span><br><span class="line"><span class="variable">$a</span> = <span class="number">0b11111111</span>; <span class="comment">// 二进制数字 (等于十进制 255)</span></span><br><span class="line"><span class="variable">$a</span> = <span class="number">1_234_567</span>; <span class="comment">// 整型数值 (PHP 7.4.0 以后)</span></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="整数溢出"><a href="#整数溢出" class="headerlink" title="整数溢出"></a>整数溢出</h2><p>如果给定的一个数超出了 integer 的范围，将会被解释为 float。同样如果执行的运算结果超出了 integer 范围，也会返回 float。</p>
+<h3 id="Example-2-32-位系统下的整数溢出"><a href="#Example-2-32-位系统下的整数溢出" class="headerlink" title="Example #2 32 位系统下的整数溢出"></a><strong>Example #2 32 位系统下的整数溢出</strong></h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="variable">$large_number</span> = <span class="number">2147483647</span>;</span><br><span class="line">var_dump(<span class="variable">$large_number</span>);                     <span class="comment">// int(2147483647)</span></span><br><span class="line"></span><br><span class="line"><span class="variable">$large_number</span> = <span class="number">2147483648</span>;</span><br><span class="line">var_dump(<span class="variable">$large_number</span>);                     <span class="comment">// float(2147483648)</span></span><br><span class="line"></span><br><span class="line"><span class="variable">$million</span> = <span class="number">1000000</span>;</span><br><span class="line"><span class="variable">$large_number</span> =  <span class="number">50000</span> * <span class="variable">$million</span>;</span><br><span class="line">var_dump(<span class="variable">$large_number</span>);                     <span class="comment">// float(50000000000)</span></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>Example #3 64 位系统下的整数溢出</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="variable">$large_number</span> = <span class="number">9223372036854775807</span>;</span><br><span class="line">var_dump(<span class="variable">$large_number</span>);                     <span class="comment">// int(9223372036854775807)</span></span><br><span class="line"></span><br><span class="line"><span class="variable">$large_number</span> = <span class="number">9223372036854775808</span>;</span><br><span class="line">var_dump(<span class="variable">$large_number</span>);                     <span class="comment">// float(9.2233720368548E+18)</span></span><br><span class="line"></span><br><span class="line"><span class="variable">$million</span> = <span class="number">1000000</span>;</span><br><span class="line"><span class="variable">$large_number</span> =  <span class="number">50000000000000</span> * <span class="variable">$million</span>;</span><br><span class="line">var_dump(<span class="variable">$large_number</span>);                     <span class="comment">// float(5.0E+19)</span></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>PHP 中没有整除的运算符。<code>1/2</code> 产生出 float <code>0.5</code>。 值可以舍弃小数部分，强制转换为 integer，或者使用 <a target="_blank" rel="noopener" href="https://www.php.net/manual/zh/function.round.php">round()</a> 函数可以更好地进行四舍五入。</p>
+<p>从 PHP 7.0.0 开始，函数 <a target="_blank" rel="noopener" href="https://www.php.net/manual/zh/function.intdiv.php">intdiv()</a> 可以用于整数除法。</p>
+</blockquote>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">var_dump(<span class="number">25</span>/<span class="number">7</span>);         <span class="comment">// float(3.5714285714286) </span></span><br><span class="line">var_dump((<span class="keyword">int</span>) (<span class="number">25</span>/<span class="number">7</span>)); <span class="comment">// int(3)</span></span><br><span class="line">var_dump(round(<span class="number">25</span>/<span class="number">7</span>));  <span class="comment">// float(4) </span></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="转换为整形"><a href="#转换为整形" class="headerlink" title="转换为整形"></a>转换为整形</h2><p>要明确地将一个值转换为 integer，用 <code>(int)</code> 或 <code>(integer)</code> 强制转换。不过大多数情况下都不需要强制转换，因为当运算符，函数或流程控制需要一个 integer 参数时，值会自动转换。还可以通过函数 <a target="_blank" rel="noopener" href="https://www.php.net/manual/zh/function.intval.php">intval()</a> 来将一个值转换成整型。</p>
+<p>将 resource 转换成 integer 时， 结果会是 PHP 运行时为 resource 分配的唯一资源号。</p>
+<h3 id="从布尔值转换"><a href="#从布尔值转换" class="headerlink" title="从布尔值转换"></a>从布尔值转换</h3><p><strong><code>FALSE</code></strong> 将产生出 <code>0</code>（零），**<code>TRUE</code>** 将产生出 <code>1</code>（壹）。</p>
+<h3 id="从浮点型转换"><a href="#从浮点型转换" class="headerlink" title="从浮点型转换"></a>从浮点型转换</h3><p>当从浮点数转换成整数时，将向下取整。</p>
+<blockquote>
+<p>PHP 7.0.0 起，NaN 和 Infinity 在转换成 integer 时，不再是 undefined 或者依赖于平台，而是都会变成零。</p>
+<p>绝不要将未知的分数强制转换为 integer，这样有时会导致不可预料的结果，比如：</p>
+</blockquote>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">echo</span> (<span class="keyword">int</span>) ( (<span class="number">0.1</span>+<span class="number">0.7</span>) * <span class="number">10</span> ); <span class="comment">// 显示 7!</span></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="从字符串转换"><a href="#从字符串转换" class="headerlink" title="从字符串转换"></a>从字符串转换</h3><p>当一个字符串被当作一个数值来取值，其结果和类型如下：</p>
+<p>如果该字符串没有包含 ‘.’，’e’ 或 ‘E’ 并且其数字值在整型的范围之内（由 <strong><code>PHP_INT_MAX</code></strong> 所定义），该字符串将被当成 integer 来取值。其它所有情况下都被作为 float 来取值。</p>
+<p>该字符串的开始部分决定了它的值。如果该字符串以合法的数值开始，则使用该数值。否则其值为 0（零）。合法数值由可选的正负号，后面跟着一个或多个数字（可能有小数点），再跟着可选的指数部分。指数部分由 ‘e’ 或 ‘E’ 后面跟着一个或多个数字构成。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="variable">$foo</span> = <span class="number">1</span> + <span class="string">&quot;10.5&quot;</span>;                <span class="comment">// $foo is float (11.5)</span></span><br><span class="line"><span class="variable">$foo</span> = <span class="number">1</span> + <span class="string">&quot;-1.3e3&quot;</span>;              <span class="comment">// $foo is float (-1299)</span></span><br><span class="line"><span class="variable">$foo</span> = <span class="number">1</span> + <span class="string">&quot;bob-1.3e3&quot;</span>;           <span class="comment">// $foo is integer (1)</span></span><br><span class="line"><span class="variable">$foo</span> = <span class="number">1</span> + <span class="string">&quot;bob3&quot;</span>;                <span class="comment">// $foo is integer (1)</span></span><br><span class="line"><span class="variable">$foo</span> = <span class="number">1</span> + <span class="string">&quot;10 Small Pigs&quot;</span>;       <span class="comment">// $foo is integer (11)</span></span><br><span class="line"><span class="variable">$foo</span> = <span class="number">4</span> + <span class="string">&quot;10.2 Little Piggies&quot;</span>; <span class="comment">// $foo is float (14.2)</span></span><br><span class="line"><span class="variable">$foo</span> = <span class="string">&quot;10.0 pigs &quot;</span> + <span class="number">1</span>;          <span class="comment">// $foo is float (11)</span></span><br><span class="line"><span class="variable">$foo</span> = <span class="string">&quot;10.0 pigs &quot;</span> + <span class="number">1.0</span>;        <span class="comment">// $foo is float (11)     </span></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="从NULL转换"><a href="#从NULL转换" class="headerlink" title="从NULL转换"></a>从NULL转换</h3><p>NULL 会转换为零 (<code>0</code>)</p>
+<h3 id="从其它类型转换"><a href="#从其它类型转换" class="headerlink" title="从其它类型转换"></a>从其它类型转换</h3><p>Caution 没有定义从其它类型转换为整型的行为。<em>不要</em>依赖任何现有的行为，因为它会未加通知地改变</p>
+
+            </div>
+        
+        <footer class="article-footer">
+        </footer>
+    </div>
+</article>
+
+
+    
+<nav id="article-nav">
+    
+        <a href="/post/3247369179.html" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">Newer</strong>
+            <div class="article-nav-title">
+                
+                    PHP基础-数据类型-string
+                
+            </div>
+        </a>
+    
+    
+        <a href="/post/886155297.html" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">Older</strong>
+            <div class="article-nav-title">PHP基础-数据类型-boolean</div>
+        </a>
+    
+</nav>
+
+
+
+
+
+    
+    
+
+
+
+
+<!-- baidu url auto push script -->
+<script type="text/javascript">
+    !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=window.location.href,o=document.referrer;if(!e.test(r)){var n="//api.share.baidu.com/s.gif";o?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var t=new Image;t.src=n}}(window);
+</script>     
+</section>
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            Dawson Liu &copy; 2021 
+            <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/80x15.png" /></a>
+            <br> Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme - <a target="_blank" rel="noopener" href="https://github.com/zthxxx/hexo-theme-Wikitten">wikitten</a>
+            
+                <br>
+                <span id="busuanzi_container_site_pv"><i class="fa fa-eye"></i> <span id="busuanzi_value_site_pv"></span></span>
+                &nbsp;|&nbsp;
+                <span id="busuanzi_container_site_pv"><i class="fa fa-user"></i> <span id="busuanzi_value_site_uv"></span></span>
+            
+        </div>
+    </div>
+</footer>
+
+        
+
+    
+        
+<script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-share.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-video.min.js"></script>
+
+    
+    
+        
+<script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+
+    
+    
+        <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true,
+            TeX: {
+                equationNumbers: {
+                  autoNumber: 'AMS'
+                }
+            }
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script async src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+
+<script src="/js/main.js"></script>
+
+
+    </div>
+</body>
+</html>

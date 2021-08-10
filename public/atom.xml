@@ -1,0 +1,522 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Coding花园</title>
+  
+  <subtitle>柳旦旦的blog</subtitle>
+  <link href="https://dd-code.site/atom.xml" rel="self"/>
+  
+  <link href="https://dd-code.site/"/>
+  <updated>2021-08-10T15:56:52.309Z</updated>
+  <id>https://dd-code.site/</id>
+  
+  <author>
+    <name>Dawson Liu</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>《网络经济与企业管理》第一次课</title>
+    <link href="https://dd-code.site/post/701979186.html"/>
+    <id>https://dd-code.site/post/701979186.html</id>
+    <published>2021-08-10T15:56:52.307Z</published>
+    <updated>2021-08-10T15:56:52.309Z</updated>
+    
+    
+    
+    
+    <category term="自考提升" scheme="https://dd-code.site/categories/%E8%87%AA%E8%80%83%E6%8F%90%E5%8D%87/"/>
+    
+    <category term="网络经济与企业管理" scheme="https://dd-code.site/categories/%E8%87%AA%E8%80%83%E6%8F%90%E5%8D%87/%E7%BD%91%E7%BB%9C%E7%BB%8F%E6%B5%8E%E4%B8%8E%E4%BC%81%E4%B8%9A%E7%AE%A1%E7%90%86/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>linux系统scp文件传输</title>
+    <link href="https://dd-code.site/post/82110573.html"/>
+    <id>https://dd-code.site/post/82110573.html</id>
+    <published>2021-07-26T03:23:17.319Z</published>
+    <updated>2021-08-10T15:51:26.872Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="命令格式"><a href="#命令格式" class="headerlink" title="命令格式"></a>命令格式</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp [参数] [原路径] [目标路径]</span><br></pre></td></tr></table></figure><h2 id="命令参数"><a href="#命令参数" class="headerlink" title="命令参数"></a>命令参数</h2><ul><li>-1 强制scp命令使用协议ssh1</li><li>-2 强制scp命令使用协议ssh2</li><li>-4 强制scp命令只使用IPv4寻址</li><li>-6 强制scp命令只使用IPv6寻址</li><li>-B 使用批处理模式（传输过程中不询问传输口令或短语）</li><li>-C 允许压缩。（将-C标志传递给ssh，从而打开压缩功能）</li><li>-p 保留原文件的修改时间，访问时间和访问权限。</li><li>-q 不显示传输进度条。</li><li>-r 递归复制整个目录。</li><li>-v 详细方式显示输出。scp和ssh(1)会显示出整个过程的调试信息。这些信息用于调试连接，验证和配置问题。</li><li>-c cipher 以cipher将数据传输进行加密，这个选项将直接传递给ssh。</li><li>-F ssh_config 指定一个替代的ssh配置文件，此参数直接传递给ssh。</li><li>-i identity_file 从指定文件中读取传输时使用的密钥文件，此参数直接传递给ssh。</li><li>-l limit 限定用户所能使用的带宽，以Kbit/s为单位。</li><li>-o ssh_option 如果习惯于使用ssh_config(5)中的参数传递方式，</li><li>-P port 注意是大写的P, port是指定数据传输用到的端口号。</li><li>-S program 指定加密传输时所使用的程序。此程序必须能够理解ssh(1)的选项。</li></ul><h2 id="使用实例"><a href="#使用实例" class="headerlink" title="使用实例"></a>使用实例</h2><h4 id="从本地服务器复制到远程服务器："><a href="#从本地服务器复制到远程服务器：" class="headerlink" title="从本地服务器复制到远程服务器："></a><strong>从本地服务器复制到远程服务器：</strong></h4><p><strong>(1) 复制文件：</strong></p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp local_file remote_username@remote_ip:remote_folder</span><br></pre></td></tr></table></figure><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp local_file remote_username@remote_ip:remote_file</span><br></pre></td></tr></table></figure><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp local_file remote_ip:remote_folder</span><br></pre></td></tr></table></figure><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp local_file remote_ip:remote_file</span><br></pre></td></tr></table></figure><blockquote><p>第1,2个已指定了用户名，命令执行后需要输入用户密码，第1个仅指定了远程的目录，文件名字不变，第2个指定了文件名。</p><p>第3,4个没有指定用户名，命令执行后需要输入用户名和用户密码，第3个仅指定了远程的目录，文件名字不变，第4个指定了文件名。</p></blockquote><p><strong>(2) 复制目录：</strong></p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp -r local_folder remote_username@remote_ip:remote_folder</span><br></pre></td></tr></table></figure><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp -r local_folder remote_ip:remote_folder</span><br></pre></td></tr></table></figure><p><strong>二、从远程服务器复制到本地服务器：</strong></p><p><strong>(1) 从远处复制文件到本地目录:</strong></p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp root@192.168.1.68:/opt/soft/nginx-0.5.38.tar.gz /opt/soft/</span><br></pre></td></tr></table></figure><blockquote><p>从192.168.1.68机器上的/opt/soft/的目录中下载nginx-0.5.38.tar.gz 文件到本地/opt/soft/目录中</p></blockquote><p><strong>(2) 从远处复制目录到本地目录</strong></p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp -r root@192.168.1.68:/opt/soft/mongodb /opt/soft/</span><br></pre></td></tr></table></figure><blockquote><p>从192.168.1.68机器上的/opt/soft/的目录中下载mongodb 目录到本地的/opt/soft/目录来。</p></blockquote>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;命令格式&quot;&gt;&lt;a href=&quot;#命令格式&quot; class=&quot;headerlink&quot; title=&quot;命令格式&quot;&gt;&lt;/a&gt;命令格式&lt;/h2&gt;&lt;figure class=&quot;highlight shell&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pr</summary>
+      
+    
+    
+    
+    <category term="技术学习" scheme="https://dd-code.site/categories/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/"/>
+    
+    <category term="Service" scheme="https://dd-code.site/categories/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Service/"/>
+    
+    
+    <category term="Linux" scheme="https://dd-code.site/tags/Linux/"/>
+    
+    <category term="技术学习" scheme="https://dd-code.site/tags/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Ubuntu防火墙的使用和开放关闭端口</title>
+    <link href="https://dd-code.site/post/1879866913.html"/>
+    <id>https://dd-code.site/post/1879866913.html</id>
+    <published>2021-07-26T03:23:17.319Z</published>
+    <updated>2021-08-10T15:51:26.871Z</updated>
+    
+    <content type="html"><![CDATA[<p>查看防火墙状态（Ubuntu系统默认是安装了ufw防火墙）</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo ufw status</span><br></pre></td></tr></table></figure><blockquote><p><code>inactive</code>表示防火墙没有开启，并不是没有安装防火墙。</p></blockquote><p>安装防火墙：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install ufw</span><br></pre></td></tr></table></figure><p>开启防火墙</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo ufw enable</span><br></pre></td></tr></table></figure><p>开放22端口：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo ufw allow 22</span><br></pre></td></tr></table></figure><p>开启完成，需要重启防火墙生效：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo ufw reload</span><br></pre></td></tr></table></figure><p>查看22端口的监听状态：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo netstat -tunlp | grep 22      </span><br></pre></td></tr></table></figure><p>防火墙关闭普通端口</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo ufw delete allow 21</span><br></pre></td></tr></table></figure><p>防火墙开放规定协议的端口</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo ufw allow 8001/tcp</span><br></pre></td></tr></table></figure><p>防火墙关闭指定协议端口</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo ufw delete allow 8001/tcp </span><br></pre></td></tr></table></figure><h4 id="防火墙开放限定ip地址端口"><a href="#防火墙开放限定ip地址端口" class="headerlink" title="防火墙开放限定ip地址端口"></a>防火墙开放限定ip地址端口</h4><p>开放指定ip所有操作</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo ufw allow from 192.168.1.11</span><br></pre></td></tr></table></figure><p>关闭指定ip所有操作</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo ufw delete allow from 192.168.1.11</span><br></pre></td></tr></table></figure><p>开放指定ip对应端口操作</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo ufw allow from 192.168.1.12 to any port 3306</span><br></pre></td></tr></table></figure><p>关闭指定ip对应端口操作</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo ufw delete allow from 192.168.1.12 to any port 3306</span><br></pre></td></tr></table></figure><p>关闭防火墙</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo ufw disable</span><br></pre></td></tr></table></figure><h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul><li><a href="https://blog.csdn.net/willingtolove/article/details/109863064">https://blog.csdn.net/willingtolove/article/details/109863064</a></li></ul>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;查看防火墙状态（Ubuntu系统默认是安装了ufw防火墙）&lt;/p&gt;
+&lt;figure class=&quot;highlight shell&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre</summary>
+      
+    
+    
+    
+    <category term="技术学习" scheme="https://dd-code.site/categories/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/"/>
+    
+    <category term="Service" scheme="https://dd-code.site/categories/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Service/"/>
+    
+    
+    <category term="Ubuntu" scheme="https://dd-code.site/tags/Ubuntu/"/>
+    
+    <category term="技术学习" scheme="https://dd-code.site/tags/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>缓存Memcache和Redis的区别</title>
+    <link href="https://dd-code.site/post/894376550.html"/>
+    <id>https://dd-code.site/post/894376550.html</id>
+    <published>2021-07-26T03:23:17.318Z</published>
+    <updated>2021-08-10T15:51:11.450Z</updated>
+    
+    <content type="html"><![CDATA[<ul><li>Redis 和 Memcache 都是将数据存放在内存中，都是内存数据库。不过 memcache 还可用于缓存其他东西，例如图片、视频等等</li><li>Redis 不仅仅支持简单的 k/v 类型的数据，同时还提供 list，set，hash 等数据结构的存储</li><li>虚拟内存：Redis 当物理内存用完时，可以将一些很久没用到的 value 交换到磁盘</li><li>过期策略：memcache 在 set 时就指定，例如 set key1 0 0 8，即永不过期。Redis 可以通过例如 expire 设定，例如 expire name 10</li><li>分布式：设定 memcache 集群，利用 magent 做一主多从；redis 可以做一主多从。都可以一主一从</li><li>存储数据安全：memcache 挂掉后，数据没了；redis 可以定期保存到磁盘（持久化）</li><li>灾难恢复：memcache 挂掉后，数据不可恢复; redis 数据丢失后可以通过 aof 恢复</li><li>Redis支持数据的备份，即 master-slave 模式的数据备份</li></ul>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;ul&gt;
+&lt;li&gt;Redis 和 Memcache 都是将数据存放在内存中，都是内存数据库。不过 memcache 还可用于缓存其他东西，例如图片、视频等等&lt;/li&gt;
+&lt;li&gt;Redis 不仅仅支持简单的 k/v 类型的数据，同时还提供 list，set，hash 等数据结构的存</summary>
+      
+    
+    
+    
+    <category term="技术学习" scheme="https://dd-code.site/categories/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/"/>
+    
+    <category term="Redis" scheme="https://dd-code.site/categories/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Redis/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>安装SSDB</title>
+    <link href="https://dd-code.site/post/1058490118.html"/>
+    <id>https://dd-code.site/post/1058490118.html</id>
+    <published>2021-07-26T03:23:17.317Z</published>
+    <updated>2021-08-10T15:51:02.362Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="什么是SSDB"><a href="#什么是SSDB" class="headerlink" title="什么是SSDB"></a>什么是SSDB</h2><p>一个高性能的支持丰富数据结构的 NoSQL 数据库, 用于替代 Redis.</p><h2 id="特性"><a href="#特性" class="headerlink" title="特性"></a>特性</h2><ul><li>替代 Redis 数据库, Redis 的 100 倍容量</li><li>LevelDB 网络支持, 使用 C/C++ 开发</li><li>Redis API 兼容, 支持 Redis 客户端</li><li>适合存储集合数据, 如 list, hash, zset…</li><li>客户端 API 支持的语言包括: <a href="http://ssdb.io/docs/cpp/">C++</a>, <a href="http://ssdb.io/docs/zh_cn/php/">PHP</a>, Python, <a href="http://ssdb.io/docs/java/">Java</a>, Go</li><li>持久化的队列服务</li><li><strong>主从复制, 负载均衡</strong></li></ul><p>强烈推荐你把 SSDB 部署在 <strong>Linux 操作系统</strong>上.</p><p>不要在生产环境中使用 Windows 操作系统来运行 SSDB 服务器. 如果你确实必须使用 Windows 操作系统, 请在上面运行一个 Linux 虚拟机, 然后再让 SSDB 运行于这个虚拟机之中.</p><h2 id="编译和安装"><a href="#编译和安装" class="headerlink" title="编译和安装"></a>编译和安装</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">wget --no-check-certificate https://github.com/ideawu/ssdb/archive/master.zip</span><br><span class="line">unzip master</span><br><span class="line">cd ssdb-master</span><br><span class="line">make</span><br><span class="line"><span class="meta">#</span><span class="bash"> 将安装在 /usr/<span class="built_in">local</span>/ssdb 目录下</span></span><br><span class="line">sudo make install</span><br></pre></td></tr></table></figure><p>如果你想安装 ssdb 在其它的目录, 不在 <code>/usr/local</code> 目录下, 可以这样</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo make install PREFIX=/your/direcotry</span><br></pre></td></tr></table></figure><h2 id="问题解决"><a href="#问题解决" class="headerlink" title="问题解决"></a>问题解决</h2><p>如果出现如下错误:</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">g++ ...deps/snappy-1.1.0/.libs/libsnappy.a: No such file or directory</span><br><span class="line">make[1]: *** [all] Error 1</span><br></pre></td></tr></table></figure><p>或者</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">g++ ...deps/jemalloc-3.3.1/lib/libjemalloc.a: No such file or directory</span><br><span class="line">make[1]: *** [all] Error 1</span><br></pre></td></tr></table></figure><p>这是因为 Snappy 或者 Jemalloc 没有编译成功, 这一般是因为你的系统时钟有问题. 可以这样解决:</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cd deps/snappy-1.1.0</span><br><span class="line">autoreconf --force --install</span><br><span class="line">./configure</span><br><span class="line">make</span><br></pre></td></tr></table></figure><p>或者</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cd deps/jemalloc-3.3.1</span><br><span class="line">autoreconf --force --install</span><br><span class="line">./configure</span><br><span class="line">make</span><br></pre></td></tr></table></figure><h2 id="启动和停止"><a href="#启动和停止" class="headerlink" title="启动和停止"></a>启动和停止</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 启动主库, 此命令会阻塞住命令行</span></span><br><span class="line">./ssdb-server ssdb.conf</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 或者启动为后台进程(不阻塞命令行)</span></span><br><span class="line">./ssdb-server -d ssdb.conf</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 停止 ssdb-server</span></span><br><span class="line">./ssdb-server ssdb.conf -s stop</span><br><span class="line"><span class="meta">#</span><span class="bash"> 对于旧版本</span></span><br><span class="line">kill `cat ./var/ssdb.pid`</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 重启</span></span><br><span class="line">./ssdb-server ssdb.conf -s restart</span><br></pre></td></tr></table></figure><p>到目前为止, 你需要手动管理 <code>ssdb-server</code> 进程, 如果你希望在操作系统启动和停止时自动地管理, 请按下面的说明进行.</p><h2 id="SSDB-启动脚本-随操作系统自启动"><a href="#SSDB-启动脚本-随操作系统自启动" class="headerlink" title="SSDB 启动脚本(随操作系统自启动)"></a>SSDB 启动脚本(随操作系统自启动)</h2><p>假设你已经安装 SSDB 在默认的 <code>/usr/local/ssdb</code> 目录, 把 <code>tools/ssdb.sh</code> 脚本放到 <code>/etc/init.d</code> 目录下.</p><p>注意: 对于 CentOS 用户, 请将 <code>ssdb.sh</code> 重命名为 <code>ssdb</code>.</p><p>编辑下面的内容:</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> each config file <span class="keyword">for</span> one instance</span></span><br><span class="line">configs=/data/ssdb_data/test/ssdb.conf</span><br></pre></td></tr></table></figure><p>将 <code>/data/ssdb_data/test/ssdb.conf</code> 修改为你的 SSDB 配置文件的路径. 如果你有多个 SSDB 实例, 那么把它们写在一行, 用空格来分隔, 例如:</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> each config file <span class="keyword">for</span> one instance</span></span><br><span class="line">configs=/data/ssdb_data/test/ssdb.conf /data/ssdb_data/demo/ssdb.conf</span><br></pre></td></tr></table></figure><p><strong>CentOS</strong></p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo chkconfig --add ssdb</span><br><span class="line">sudo chkconfig ssdb on</span><br></pre></td></tr></table></figure><p><strong>Ubuntu</strong></p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo chmod a+x /etc/init.d/ssdb.sh</span><br><span class="line">sudo update-rc.d ssdb.sh defaults</span><br></pre></td></tr></table></figure><h2 id="资料"><a href="#资料" class="headerlink" title="资料:"></a>资料:</h2><ul><li><a href="http://ssdb.io/zh_cn/">中文官网</a></li><li><a href="http://ssdb.io/docs/zh_cn/redis-to-ssdb.html">从 Redis 迁移到 SSDB</a></li></ul>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;什么是SSDB&quot;&gt;&lt;a href=&quot;#什么是SSDB&quot; class=&quot;headerlink&quot; title=&quot;什么是SSDB&quot;&gt;&lt;/a&gt;什么是SSDB&lt;/h2&gt;&lt;p&gt;一个高性能的支持丰富数据结构的 NoSQL 数据库, 用于替代 Redis.&lt;/p&gt;
+&lt;h2 id=</summary>
+      
+    
+    
+    
+    <category term="技术学习" scheme="https://dd-code.site/categories/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/"/>
+    
+    <category term="Redis" scheme="https://dd-code.site/categories/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Redis/"/>
+    
+    
+    <category term="SSDB" scheme="https://dd-code.site/tags/SSDB/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>了解Redis</title>
+    <link href="https://dd-code.site/post/1099414406.html"/>
+    <id>https://dd-code.site/post/1099414406.html</id>
+    <published>2021-07-26T03:23:17.317Z</published>
+    <updated>2021-08-10T15:51:11.451Z</updated>
+    
+    <content type="html"><![CDATA[<p>Redis 是一个开源的内存中的数据结构存储系统，它可以用作数据库、缓存和消息中间件。它支持多种类型的数据结构，如：</p><p>字符串（strings）、散列（hashes）、列表（lists）、集合（sets）、有序集合（sorted sets）。</p><p>Redis 内置了复制、LUA 脚本、LRU 驱动事件、事务和不同级别的磁盘持久化，并通过 <strong>Redis哨兵</strong> 和 <strong>自动分区</strong> 提供高可用性。</p><h2 id="Redis-数据类型介绍"><a href="#Redis-数据类型介绍" class="headerlink" title="Redis 数据类型介绍"></a>Redis 数据类型介绍</h2><p>Redis 并不是简单的 <code>key-value</code> 存储，实际上是一个数据结构服务器，支持不同类型的值。也就是说，你不必仅仅把字符串当做键所指向的值。</p><h2 id="Redis-的值类型有："><a href="#Redis-的值类型有：" class="headerlink" title="Redis 的值类型有："></a>Redis 的值类型有：</h2><ul><li>二进制安全的字符串</li><li>Lists：按插入顺序排序的字符串元素的集合，他们基本上都是链表（linked lists）</li><li>Sets：不重复且无序的字符串元素的集合</li><li>Sorted sets：类似 <code>Sets</code> ，但是每个字符串元素都关联到一个叫 <code>score</code> 浮动数值。里边的元素总是通过 <code>score</code> 进行排序，所以不同的是，它是可以检索的一系列元素。</li><li>Hashes：由 <code>field</code> 和关联的 <code>value</code> 组成的 <code>map</code>。</li><li>Bit arrays：通过特殊的命令，你可以将 <code>String</code> 值当做一系列 bits 处理：可以设置和清除单独的 bits，数出所有设为1 的bits 的数量，找到 最前的被设置为 1 或者0 的bit，等等。</li><li>HyperLogLogs：这是被用于估计一个 <code>set</code> 中元素数量的概率性的数据结构。</li></ul><h2 id="Redis-超时：数据在限定时间内存货（过期时间设定）"><a href="#Redis-超时：数据在限定时间内存货（过期时间设定）" class="headerlink" title="Redis 超时：数据在限定时间内存货（过期时间设定）"></a>Redis 超时：数据在限定时间内存货（过期时间设定）</h2><p>在 <code>redis</code> 中可以对 <code>key</code> 设置一个超时时间，当这个时间达到后会被删除。精度可以使用毫秒或者秒。</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// 对指定keys设置过期时间为60s</span><br><span class="line">expire key 60</span><br><span class="line">// 在给key设置value的时候同时设置过期时间为60s</span><br><span class="line">set key value ex 60</span><br><span class="line">// 查询key还有多久过期</span><br><span class="line">ttl key</span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;Redis 是一个开源的内存中的数据结构存储系统，它可以用作数据库、缓存和消息中间件。它支持多种类型的数据结构，如：&lt;/p&gt;
+&lt;p&gt;字符串（strings）、散列（hashes）、列表（lists）、集合（sets）、有序集合（sorted sets）。&lt;/p&gt;
+&lt;p&gt;Re</summary>
+      
+    
+    
+    
+    <category term="技术学习" scheme="https://dd-code.site/categories/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/"/>
+    
+    <category term="Redis" scheme="https://dd-code.site/categories/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Redis/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Redis设置密码</title>
+    <link href="https://dd-code.site/post/1685059487.html"/>
+    <id>https://dd-code.site/post/1685059487.html</id>
+    <published>2021-07-26T03:23:17.316Z</published>
+    <updated>2021-08-10T15:51:11.451Z</updated>
+    
+    <content type="html"><![CDATA[<p>Redis 没有实现访问控制这个功能，但是它提供了一个轻量级的认证方式，可以编辑 <code>redis.conf</code> 配置来启用认证。</p><h3 id="1、初始化Redis密码"><a href="#1、初始化Redis密码" class="headerlink" title="1、初始化Redis密码"></a>1、初始化Redis密码</h3><p>   在配置文件中有个参数： requirepass  这个就是配置 Redis 访问密码的参数，需重启 Redis 才能生效）</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">requirepass 密码</span><br></pre></td></tr></table></figure><p>Redis 的查询速度是非常快的，外部用户一秒内可以尝试多大150K个密码，所以密码要尽量长（对于DBA 没有必要必须记住密码）；</p><h3 id="2、不重启Redis设置密码"><a href="#2、不重启Redis设置密码" class="headerlink" title="2、不重启Redis设置密码"></a>2、不重启Redis设置密码</h3><p>   在配置文件中配置 requirepass 的密码（当 Redis 重启时密码依然有效）</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">redis 127.0.0.1:6379&gt; config set requirepass 密码</span><br></pre></td></tr></table></figure><h4 id="查询密码"><a href="#查询密码" class="headerlink" title="查询密码"></a>查询密码</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">redis 127.0.0.1:6379&gt; config get requirepass</span><br><span class="line">(error) ERR operation not permitted</span><br></pre></td></tr></table></figure><h4 id="密码验证"><a href="#密码验证" class="headerlink" title="密码验证"></a>密码验证</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">redis 127.0.0.1:6379&gt; auth 密码</span><br><span class="line">OK</span><br></pre></td></tr></table></figure><h4 id="再次查询"><a href="#再次查询" class="headerlink" title="再次查询"></a>再次查询</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">redis 127.0.0.1:6379&gt; config get requirepass</span><br><span class="line">1) &quot;requirepass&quot;</span><br><span class="line">2) &quot;test123&quot;</span><br></pre></td></tr></table></figure><blockquote><p>   PS：如果配置文件中没添加密码 那么 Redis 重启后，密码失效。</p></blockquote><h3 id="3、登陆有密码的-Redis："><a href="#3、登陆有密码的-Redis：" class="headerlink" title="3、登陆有密码的 Redis："></a>3、登陆有密码的 Redis：</h3><h4 id="在登录的时候的时候输入密码"><a href="#在登录的时候的时候输入密码" class="headerlink" title="在登录的时候的时候输入密码"></a>在登录的时候的时候输入密码</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">redis-cli -p 6379 -a test123</span><br></pre></td></tr></table></figure><h4 id="先登陆后验证"><a href="#先登陆后验证" class="headerlink" title="先登陆后验证"></a>先登陆后验证</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">redis-cli -p 6379</span><br><span class="line">redis 127.0.0.1:6379&gt; auth test123</span><br><span class="line">OK</span><br></pre></td></tr></table></figure><blockquote><p>AUTH 命令跟其他redis命令一样，是没有加密的；阻止不了攻击者在网络上窃取你的密码。 </p><p>认证层的目标是提供多一层的保护。如果防火墙或者用来保护redis的系统防御外部攻击失败的话，外部用户如果没有通过密码认证还是无法访问 Redis 的。</p></blockquote><p>参考资料：</p><p><a href="https://blog.51cto.com/weipengfei/1217872">https://blog.51cto.com/weipengfei/1217872</a></p><p><strong><u><a href="https://liudandandear.gitee.io/">&lt;&lt;点击返回主页</a></u></strong></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;Redis 没有实现访问控制这个功能，但是它提供了一个轻量级的认证方式，可以编辑 &lt;code&gt;redis.conf&lt;/code&gt; 配置来启用认证。&lt;/p&gt;
+&lt;h3 id=&quot;1、初始化Redis密码&quot;&gt;&lt;a href=&quot;#1、初始化Redis密码&quot; class=&quot;header</summary>
+      
+    
+    
+    
+    <category term="技术学习" scheme="https://dd-code.site/categories/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/"/>
+    
+    <category term="Redis" scheme="https://dd-code.site/categories/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Redis/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>了解Memcache</title>
+    <link href="https://dd-code.site/post/2253204330.html"/>
+    <id>https://dd-code.site/post/2253204330.html</id>
+    <published>2021-07-26T03:23:17.316Z</published>
+    <updated>2021-08-10T15:06:31.702Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="memcache-概述"><a href="#memcache-概述" class="headerlink" title="memcache 概述"></a>memcache 概述</h2><p>memcache 就是一个数据库，但是数据存在内存中。常用来做缓存服务器、将数据库查询的数据缓存起来，减少数据库缓存、加快查询速度。<br>memcache 的数据仅保存在内存中，服务器重启后，数据将会丢失。</p><h2 id="memcache-使用场景"><a href="#memcache-使用场景" class="headerlink" title="memcache 使用场景"></a>memcache 使用场景</h2><p>缓存服务器</p><h2 id="适合存储的数据"><a href="#适合存储的数据" class="headerlink" title="适合存储的数据"></a>适合存储的数据</h2><ul><li>访问比较频繁的数据，安全性较差的数据，丢失无所谓的数据</li><li>数据更新比较频繁的数据，比如用户的在线状态</li><li>数据的单个键值不能太大，不能超过 1Mb 数据</li></ul><h2 id="memcache-可以存储的数据类型"><a href="#memcache-可以存储的数据类型" class="headerlink" title="memcache 可以存储的数据类型"></a>memcache 可以存储的数据类型</h2><p>整型、浮点型、布尔型、字符串型、数组型、对象类型、空类型</p><h2 id="memcache-相关算法"><a href="#memcache-相关算法" class="headerlink" title="memcache 相关算法"></a>memcache 相关算法</h2><p>1、惰性过期机制</p><p>说明：memcached 内部不会监视记录是否过期，而是在 get 时查看记录的时间戳，检查记录是否过期，这种技术被称为惰性过期。</p><p>好处：减少监控过期产生的开销</p><p>2、最近最少使用算法</p><p>缓存空间已满，将使用频率最低数据进行删除。</p><h2 id="memcache-常见问题"><a href="#memcache-常见问题" class="headerlink" title="memcache 常见问题"></a>memcache 常见问题</h2><h3 id="1、缓存雪崩"><a href="#1、缓存雪崩" class="headerlink" title="1、缓存雪崩"></a>1、缓存雪崩</h3><p>场景：项目缓存同一时间失效</p><p>问题：瞬间几万次、几千万次的同时访问数据库，数据库崩溃。</p><p>解决：</p><p>①不要集中设置缓存有效期</p><p>②控制缓存在闲时过期</p><p>③主从复制、读写分离</p><h3 id="2、永久数据被踢"><a href="#2、永久数据被踢" class="headerlink" title="2、永久数据被踢"></a>2、永久数据被踢</h3><p>原因：因为惰性过期机制和最少使用机制导致</p><p>解决：永久数据和飞=非永久数据分开存放</p><p>​                                                                                                                                               </p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;memcache-概述&quot;&gt;&lt;a href=&quot;#memcache-概述&quot; class=&quot;headerlink&quot; title=&quot;memcache 概述&quot;&gt;&lt;/a&gt;memcache 概述&lt;/h2&gt;&lt;p&gt;memcache 就是一个数据库，但是数据存在内存中。常用来做缓存服</summary>
+      
+    
+    
+    
+    <category term="技术学习" scheme="https://dd-code.site/categories/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/"/>
+    
+    <category term="数据库" scheme="https://dd-code.site/categories/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+    
+    <category term="Memcache" scheme="https://dd-code.site/categories/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/%E6%95%B0%E6%8D%AE%E5%BA%93/Memcache/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Redis持久化</title>
+    <link href="https://dd-code.site/post/295621084.html"/>
+    <id>https://dd-code.site/post/295621084.html</id>
+    <published>2021-07-26T03:23:17.315Z</published>
+    <updated>2021-08-10T15:51:11.451Z</updated>
+    
+    <content type="html"><![CDATA[<ul><li>Redis是一种高级的key- value数据库。它所有的数据都保存在内存中，然后不定期的通过异步方式保存到磁盘上（这种称为“半持久化模式”），也可以把每一次的数据变化都写入到append only file（aof）里面（称为“全持久化模式”）。</li><li>由于Redis的数据都放在内存中，如果没有配置持久化，redis重启后数据就全部丢失了，于是需要开启redis的持久化功能，将数据保存在磁盘上，当Redis重启后，可以从磁盘恢复数据。</li><li>Redis提供两种方式进行持久化：</li></ul><p>①是RDB持久化，原理是将Redis的数据记录定时备份到磁盘中；</p><p>②是AOF持久化，原理是将Redis的操作日志以追加的方式写入文件。</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;ul&gt;
+&lt;li&gt;Redis是一种高级的key- value数据库。它所有的数据都保存在内存中，然后不定期的通过异步方式保存到磁盘上（这种称为“半持久化模式”），也可以把每一次的数据变化都写入到append only file（aof）里面（称为“全持久化模式”）。&lt;/li&gt;
+&lt;</summary>
+      
+    
+    
+    
+    <category term="技术学习" scheme="https://dd-code.site/categories/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/"/>
+    
+    <category term="Redis" scheme="https://dd-code.site/categories/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Redis/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Redis数据类型比较和使用场景</title>
+    <link href="https://dd-code.site/post/1349846639.html"/>
+    <id>https://dd-code.site/post/1349846639.html</id>
+    <published>2021-07-26T03:23:17.315Z</published>
+    <updated>2021-08-10T15:51:11.451Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote><p>Redis 支持五种数据类型：</p><p>string（字符串）、hash（哈希）、list（列表）、set（集合）、zset（有序集合）</p></blockquote><h4 id="字符串（String）"><a href="#字符串（String）" class="headerlink" title="字符串（String）"></a>字符串（String）</h4><p><code>string</code> 是 <strong>redis</strong> 最基本的类型，可以理解为和 <strong>memcache</strong> 一模一样的类型，key-&gt;value 结构</p><p>string 类型是二进制安全的。意思是 redis 的 <code>string</code> 可以包含任何数据。比如 jpg 图片或者序列化的对象。</p><p><code>string</code> 类型是 redis 最基本的数据类型，<code>string</code> 类型的值最大能存储 512MB</p><p><strong>应用场景：</strong></p><ul><li>手机验证码存储，过期时间失效</li><li>缓存功能</li><li>计数器</li><li><code>bitmap</code> 位图：可广泛用于，签到、活跃、打卡等场景统计</li><li>分布式锁</li></ul><h4 id="哈希（Hash）"><a href="#哈希（Hash）" class="headerlink" title="哈希（Hash）"></a>哈希（Hash）</h4><p>Redis <code>hash</code> 是一个键值对（<code>key-&gt;value</code>）集合，是一个 <code>string</code> 类型的 <code>field</code> 和 <code>value</code> 的映射表，<code>hash</code> 特别适合用于存储对象。</p><p>每个 <code>hash</code> 可以存储 <code>232-1</code> 键值对（40多亿）。</p><p><strong>应用场景：</strong></p><ul><li>存储一个用户信息对象数据，比如用户的昵称、年龄、性别、积分等</li><li>购物车数据</li></ul><h4 id="列表（List）"><a href="#列表（List）" class="headerlink" title="列表（List）"></a>列表（List）</h4><p>Redis  <code>List</code> 是一个双向链表，按照插入顺序排序。可以添加一个元素到列表的头部（左边）或者尾部（右边）。</p><p><strong>应用场景：</strong></p><ul><li>List 类型经常会被用于消息队列的服务，以完成多程序之间的消息交换</li><li>各种列表，比如：关注列表、粉丝列表、最新消息排行、每篇文章的评论</li><li>利用 <code>lrange</code> 可以很方便的实现 <code>list</code> 内容分页的功能</li></ul><h4 id="集合（Set）"><a href="#集合（Set）" class="headerlink" title="集合（Set）"></a>集合（Set）</h4><p>Redis 的 <code>set</code> 是 <code>string</code> 类型的无序集合。集合中的元素没有先后顺序，不重复。将重复的元素放入 <code>Set</code> 会自动去重。</p><p>和列表一样，在执行插入、删除、判断是否存在某元素时，效率比较高。集合最大的优势在于可以进行交集、并集、差集 操作。</p><p><code>set</code> 可包含的最大元素数量是 <code>4294967295</code>。</p><p>集合是通过哈希表实现的，所以添加、删除、查找的复杂度都是 <code>O（1）</code>。</p><p><strong>应用场景：</strong></p><ul><li>利用交集求共同好友</li><li>利用唯一性，可以统计访问网站的所有独立IP、需要去重列表场景</li><li>好友推荐的时候可以根据 <code>tag</code> 求交集，大于某个临界值就可以推荐，集合最大的成员数为 232 - 1（4294967295，每个集合可存储40多亿个成员）</li></ul><h4 id="有序集合（zset）"><a href="#有序集合（zset）" class="headerlink" title="有序集合（zset）"></a>有序集合（zset）</h4><p>Redis <code>zset</code> 和 <code>set</code> 一样也是 <code>string</code> 类型元素的集合，且不允许重复的成员。</p><p>不同的是每个元素都会关联一个 <code>double</code> 类型的分数。Redis 正是通过分数来为集合中的成员进行从小到大的排序。</p><p><code>zset</code>  的成员是惟一的，但分数 <code>score</code> 却可以重复。</p><p><code>sorted</code>、 <code>set</code> 是插入有序的，即自动排序。</p><p><strong>应用场景：</strong></p><p>当你需要一个有序的并且不重复的集合列表是，那么可以选择 <code>sorted</code> 、<code>set</code> 数据结构。</p><p><strong>应用举例：</strong></p><ul><li>例如存储全班同学的成绩，其集合 <code>value</code> 可以是同学的学号，而 <code>score</code> 就可以是成绩</li><li>排行榜应用，更具得分列出 <strong>topN</strong> 的用户</li><li>不重复的集合列表</li><li>过期淘汰场景</li></ul>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;blockquote&gt;
+&lt;p&gt;Redis 支持五种数据类型：&lt;/p&gt;
+&lt;p&gt;string（字符串）、hash（哈希）、list（列表）、set（集合）、zset（有序集合）&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h4 id=&quot;字符串（String）&quot;&gt;&lt;a href=&quot;#字符串</summary>
+      
+    
+    
+    
+    <category term="技术学习" scheme="https://dd-code.site/categories/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/"/>
+    
+    <category term="Redis" scheme="https://dd-code.site/categories/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Redis/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>docker安装oracle19c</title>
+    <link href="https://dd-code.site/post/3032572741.html"/>
+    <id>https://dd-code.site/post/3032572741.html</id>
+    <published>2021-07-26T03:23:17.314Z</published>
+    <updated>2021-08-10T15:50:52.845Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="拉取镜像"><a href="#拉取镜像" class="headerlink" title="拉取镜像"></a>拉取镜像</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull registry.cn-hangzhou.aliyuncs.com/zhuyijun/oracle:19c</span><br></pre></td></tr></table></figure><h2 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">docker run -p 1521:1521 -p 5500:5500 \</span><br><span class="line">-e ORACLE_SID=orcl \</span><br><span class="line">-e ORACLE_PDB=orclpdb1 \</span><br><span class="line">-e ORACLE_PWD=123456 \</span><br><span class="line">-e ORACLE_CHARACTERSET=zhs16gbk \</span><br><span class="line">-e ORACLE_BASE=/opt/oracle \</span><br><span class="line">-e ORACLE_HOME=/opt/oracle/product/19c/dbhome_1 \</span><br><span class="line">-e PATH=/opt/oracle/product/19c/dbhome_1/bin:/opt/oracle/product/19c/dbhome_1/OPatch/:/usr/sbin:/usr/<span class="built_in">local</span>/sbin:/usr/<span class="built_in">local</span>/bin:/usr/sbin:/usr/bin:/sbin:/bin \</span><br><span class="line">-v /Users/liudandan/homedata/oradata:/opt/oracle/oradata \</span><br><span class="line">--name myoracle \</span><br><span class="line">registry.cn-hangzhou.aliyuncs.com/zhuyijun/oracle:19c</span><br></pre></td></tr></table></figure><p>注意1：</p><blockquote><p>1、注意使用之前请修改启动参数   </p><p>2、修改/Users/liudandan/homedata/oradata为自己创建的orcale数据存储目录</p><p>3、<container name>请填写镜像的容器id或者容器名</p></blockquote><p>注意2：</p><blockquote><p>1、出现DATABASE IS READY TO USE 代表者成功了</p><p>2、这时先不要关闭终端，另外开启一个</p><p>3、进入环境修改oracle密码</p></blockquote><h2 id="启动成功之后的界面"><a href="#启动成功之后的界面" class="headerlink" title="启动成功之后的界面"></a>启动成功之后的界面</h2><p>启动需要一定时间，这是正在启动的画面</p><p><img src="https://cdn.dd-code.site/PicGo/20210401213339.png" alt="image-20210401213336943"></p><p><img src="https://cdn.dd-code.site/PicGo/20210401213728.png" alt="image-20210401213725696"></p><p><img src="https://cdn.dd-code.site/PicGo/20210402000212.png"></p><h2 id="修改Oralce数据库密码"><a href="#修改Oralce数据库密码" class="headerlink" title="修改Oralce数据库密码"></a>修改Oralce数据库密码</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker exec  myoracle ./setPassword.sh 123456</span><br></pre></td></tr></table></figure><blockquote><p>！修改完密码后可以关闭之前终端了，出现 DATABASE IS READY TO USE之后，后边都是显示的日志，可以关闭终端，关闭终端不会导致它停止运行</p></blockquote><h2 id="进入Oracle-Enterprise-Manager-Database-Express页面"><a href="#进入Oracle-Enterprise-Manager-Database-Express页面" class="headerlink" title="进入Oracle Enterprise Manager Database Express页面"></a>进入Oracle Enterprise Manager Database Express页面</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https:&#x2F;&#x2F;localhost:5500&#x2F;em</span><br></pre></td></tr></table></figure><blockquote><p>！注意输入网址是采用的是https，http无法访问。</p></blockquote><table><thead><tr><th>账号</th><th>system/sys/等</th></tr></thead><tbody><tr><td>密码</td><td>123456</td></tr><tr><td>容器名</td><td>orclpdb1</td></tr></tbody></table>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;拉取镜像&quot;&gt;&lt;a href=&quot;#拉取镜像&quot; class=&quot;headerlink&quot; title=&quot;拉取镜像&quot;&gt;&lt;/a&gt;拉取镜像&lt;/h2&gt;&lt;figure class=&quot;highlight shell&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pr</summary>
+      
+    
+    
+    
+    <category term="技术学习" scheme="https://dd-code.site/categories/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/"/>
+    
+    <category term="Oracle" scheme="https://dd-code.site/categories/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Oracle/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>Centos7下Oracle19c的安装</title>
+    <link href="https://dd-code.site/post/1452475922.html"/>
+    <id>https://dd-code.site/post/1452475922.html</id>
+    <published>2021-07-26T03:23:17.310Z</published>
+    <updated>2021-08-10T15:50:52.844Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="第一步：检查Linux系统版本"><a href="#第一步：检查Linux系统版本" class="headerlink" title="第一步：检查Linux系统版本"></a>第一步：检查Linux系统版本</h2><p>执行命令 lsb_release -a 查看系统版本</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">lsb_release -a</span><br></pre></td></tr></table></figure><p>用yum更新升级自己的系统到当前最新。</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum -y clean all</span><br></pre></td></tr></table></figure><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum -y update</span><br></pre></td></tr></table></figure><h2 id="第二步：下载Oracle19c的安装包"><a href="#第二步：下载Oracle19c的安装包" class="headerlink" title="第二步：下载Oracle19c的安装包"></a>第二步：下载Oracle19c的安装包</h2><p>下载地址：<a href="https://www.oracle.com/database/technologies/oracle-database-software-downloads.html#19c">https://www.oracle.com/database/technologies/oracle-database-software-downloads.html#19c</a></p><p><img src="https://cdn.dd-code.site/PicGo/20210408225753.png" alt="image-20210408225643282"></p><h2 id="第三步：下载Oracle19c的预安装包"><a href="#第三步：下载Oracle19c的预安装包" class="headerlink" title="第三步：下载Oracle19c的预安装包"></a>第三步：下载Oracle19c的预安装包</h2><p>下载地址：<a href="http://yum.oracle.com/repo/OracleLinux/OL7/latest/x86_64/getPackage/oracle-database-preinstall-19c-1.0-1.el7.x86_64.rpm">http://yum.oracle.com/repo/OracleLinux/OL7/latest/x86_64/getPackage/oracle-database-preinstall-19c-1.0-1.el7.x86_64.rpm</a></p><h2 id="第四步：安装包全部上传到Linux"><a href="#第四步：安装包全部上传到Linux" class="headerlink" title="第四步：安装包全部上传到Linux"></a>第四步：安装包全部上传到Linux</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp oracle-database-ee-19c-1.0-1.x86_64.rpm root@39.107.245.19:/root</span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;第一步：检查Linux系统版本&quot;&gt;&lt;a href=&quot;#第一步：检查Linux系统版本&quot; class=&quot;headerlink&quot; title=&quot;第一步：检查Linux系统版本&quot;&gt;&lt;/a&gt;第一步：检查Linux系统版本&lt;/h2&gt;&lt;p&gt;执行命令 lsb_release -</summary>
+      
+    
+    
+    
+    <category term="技术学习" scheme="https://dd-code.site/categories/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/"/>
+    
+    <category term="Oracle" scheme="https://dd-code.site/categories/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/Oracle/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>事务的四个特性</title>
+    <link href="https://dd-code.site/post/1868093003.html"/>
+    <id>https://dd-code.site/post/1868093003.html</id>
+    <published>2021-07-26T03:23:17.309Z</published>
+    <updated>2021-08-10T15:50:26.793Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>数据库事务 (Database Transaction) ，是指作为单个逻辑工作单元执行的一系列操作，要么完全地执行，要么完全地不执行。</p><h2 id="事务隔离"><a href="#事务隔离" class="headerlink" title="事务隔离"></a><strong>事务隔离</strong></h2><p>同一时间，只允许一个事务请求同一数据，不同的事务之间彼此没有任何干扰。比如 A 正在从一张银行卡中取钱，在 A 取钱的过程结束前，B 不能向这张卡转账。</p><h2 id="数据库事务的四个特性（四种隔离状态）"><a href="#数据库事务的四个特性（四种隔离状态）" class="headerlink" title="数据库事务的四个特性（四种隔离状态）"></a><strong>数据库事务的四个特性（四种隔离状态）</strong></h2><p>事务具有4个基本特征，分别是：原子性（Atomicity）、一致性（Consistency）、隔离性（Isolation）、持久性（Duration），简称ACID。</p><ul><li><p>原子性：事务由一个或多个行为捆绑在一起，好像是一个独立的工作单元。原子性保证事务内的操作要么都发生，要么都不发生。假如所有的操作都成功了，那么事务是成功的；假如任何一个操作失败，那么事务就会进行回滚</p></li><li><p>一致性：一旦一个事务结束了，不管是成功还是失败，系统所处的状态和业务规则是一致的。也就是说，数据应当不会被破坏</p></li><li><p>隔离性：事务应当允许多个用户操作同一个数据，一个用户的操作不应该和其他用户的操作相混淆。因此事务是相互隔离的，防止并行读写同一个数据的情况发生。注意：隔离性通常意味着要锁定数据库的表或行</p><p><strong>不同的隔离级别</strong> ：</p><ul><li>Read Uncommitted（读取未提交[添加中文释义]内容）：最低的隔离级别，什么都不需要做，一个事务可以读到另一个事务未提交的结果。所有的并发事务问题都会发生</li><li>Read Committed（读取提交内容）：只有在事务提交后，其更新结果才会被其他事务看见。可以解决脏读问题</li><li>Repeated Read（可重复读）：在一个事务中，对于同一份数据的读取结果总是相同的，无论是否有其他事务对这份数据进行操作，以及这个事务是否提交。可以解决脏读、不可重复读</li><li>Serialization（可串行化）：事务串行化执行，隔离级别最高，牺牲了系统的并发性。可以解决并发事务的所有问题</li></ul></li><li><p>持久性：一旦事务完成，事务的结果应当持久化。这样不管什么样的系统崩溃，都不会造成数据异常。</p></li></ul>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;简介&quot;&gt;&lt;a href=&quot;#简介&quot; class=&quot;headerlink&quot; title=&quot;简介&quot;&gt;&lt;/a&gt;简介&lt;/h2&gt;&lt;p&gt;数据库事务 (Database Transaction) ，是指作为单个逻辑工作单元执行的一系列操作，要么完全地执行，要么完全地不执行。&lt;/</summary>
+      
+    
+    
+    
+    <category term="技术学习" scheme="https://dd-code.site/categories/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/"/>
+    
+    <category term="MySQL" scheme="https://dd-code.site/categories/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/MySQL/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>使用MySqlDump备份</title>
+    <link href="https://dd-code.site/post/2178661577.html"/>
+    <id>https://dd-code.site/post/2178661577.html</id>
+    <published>2021-07-26T03:23:17.309Z</published>
+    <updated>2021-08-10T15:50:30.422Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="如何备份数据库"><a href="#如何备份数据库" class="headerlink" title="如何备份数据库"></a>如何备份数据库</h2><h3 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysqldump [arguments] &gt; file_name</span><br></pre></td></tr></table></figure><h3 id="要转储所有数据库，请使用以下选项调用"><a href="#要转储所有数据库，请使用以下选项调用" class="headerlink" title="要转储所有数据库，请使用以下选项调用"></a>要转储所有数据库，请使用以下选项调用</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysqldump --all-databases &gt; dump.sql</span><br></pre></td></tr></table></figure><h3 id="要仅转储特定数据库，请在命令行上命名它们并使用以下"><a href="#要仅转储特定数据库，请在命令行上命名它们并使用以下" class="headerlink" title="要仅转储特定数据库，请在命令行上命名它们并使用以下"></a>要仅转储特定数据库，请在命令行上命名它们并使用以下</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysqldump --databases db1 db2 db3 &gt; dump.sql</span><br></pre></td></tr></table></figure><h3 id="要转储单个数据库，请在命令行上将其命名"><a href="#要转储单个数据库，请在命令行上将其命名" class="headerlink" title="要转储单个数据库，请在命令行上将其命名"></a>要转储单个数据库，请在命令行上将其命名</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysqldump --databases test &gt; dump.sql</span><br></pre></td></tr></table></figure><h3 id="在单数据库情况下，可以忽略以下-–databases-选项"><a href="#在单数据库情况下，可以忽略以下-–databases-选项" class="headerlink" title="在单数据库情况下，可以忽略以下 –databases 选项"></a>在单数据库情况下，可以忽略以下 –databases 选项</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysqldump test &gt; dump.sql</span><br></pre></td></tr></table></figure><h3 id="要仅转储数据库中的特定表，请在数据库名称后的命令行中将其命名"><a href="#要仅转储数据库中的特定表，请在数据库名称后的命令行中将其命名" class="headerlink" title="要仅转储数据库中的特定表，请在数据库名称后的命令行中将其命名"></a>要仅转储数据库中的特定表，请在数据库名称后的命令行中将其命名</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysqldump test t1 t3 t7 &gt; dump.sql</span><br></pre></td></tr></table></figure><h3 id="备份到当前的目录（在对应目录下执行以下命令）"><a href="#备份到当前的目录（在对应目录下执行以下命令）" class="headerlink" title="备份到当前的目录（在对应目录下执行以下命令）"></a>备份到当前的目录（在对应目录下执行以下命令）</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysqldump -u root -p --opt database &gt; database.sql</span><br></pre></td></tr></table></figure><h2 id="如何恢复数据库"><a href="#如何恢复数据库" class="headerlink" title="如何恢复数据库"></a>如何恢复数据库</h2><h3 id="语法-1"><a href="#语法-1" class="headerlink" title="语法"></a>语法</h3><p>登录数据库</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql -u root -p</span><br></pre></td></tr></table></figure><p>进入对应的数据库</p><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">use test;</span><br></pre></td></tr></table></figure><p>执行恢复命令</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">source /source /tmp/test.sql</span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;如何备份数据库&quot;&gt;&lt;a href=&quot;#如何备份数据库&quot; class=&quot;headerlink&quot; title=&quot;如何备份数据库&quot;&gt;&lt;/a&gt;如何备份数据库&lt;/h2&gt;&lt;h3 id=&quot;语法&quot;&gt;&lt;a href=&quot;#语法&quot; class=&quot;headerlink&quot; title=&quot;语</summary>
+      
+    
+    
+    
+    <category term="技术学习" scheme="https://dd-code.site/categories/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/"/>
+    
+    <category term="MySQL" scheme="https://dd-code.site/categories/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/MySQL/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>MySQL索引失效情况</title>
+    <link href="https://dd-code.site/post/548465112.html"/>
+    <id>https://dd-code.site/post/548465112.html</id>
+    <published>2021-07-26T03:23:17.307Z</published>
+    <updated>2021-08-10T15:50:26.794Z</updated>
+    
+    <content type="html"><![CDATA[<p>首先，复习一下索引的创建：</p><p>普通的索引的创建</p><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> INDEX (自定义)索引名 <span class="keyword">ON</span> 数据表(字段)</span><br></pre></td></tr></table></figure><p>复合索引的创建</p><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> INDEX (自定义)索引名 <span class="keyword">ON</span> 数据表(字段，字段，。。。)</span><br></pre></td></tr></table></figure><p>删除索引</p><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DROP</span> INDEX 索引名</span><br></pre></td></tr></table></figure><p>以下通过 explain 显示出 mysql 执行的字段内容：</p><ul><li>id: SELECT 查询的标识符. 每个 SELECT 都会自动分配一个唯一的标识符.</li><li>select_type: SELECT 查询的类型.</li><li>table: 查询的是哪个表</li><li>partitions: 匹配的分区</li><li>type: join 类型</li><li>possible_keys: 此次查询中可能选用的索引</li><li>key: 此次查询中确切使用到的索引</li><li>ref: 哪个字段或常数与 key 一起被使用</li><li>rows: 显示此查询一共扫描了多少行. 这个是一个估计值.</li><li>filtered: 表示此查询条件所过滤的数据的百分比</li><li>extra: 额外的信息</li></ul><p>索引查询失效的几个情况：</p><p>1、like 以%开头，索引无效；当like前缀没有%，后缀有%时，索引有效。</p><p>2、or语句前后没有同时使用索引。当or左右查询字段只有一个是索引，该索引失效，只有当or左右查询字段均为索引时，才会生效</p><p>3、组合索引，不是使用第一列索引，索引失效</p><p>4、数据类型出现隐式转化。如varchar不加单引号的话可能会自动转换为int型，使索引无效，产生全表扫描。</p><p>5、在索引列上使用 IS NULL 或 IS NOT NULL操作。索引是不索引空值的，所以这样的操作不能使用索引，可以用其他的办法处理，例如：数字类型，判断大于0，字符串类型设置一个默认值，判断是否等于默认值即可。</p><p>6、在索引字段上使用not，&lt;&gt;，!=。不等于操作符是永远不会用到索引的，因此对它的处理只会产生全表扫描。 优化方法： key&lt;&gt;0 改为 key&gt;0 or key&lt;0。</p><p>7、对索引字段进行计算操作、字段上使用函数。（索引为 emp(ename,empno,sal)）</p><p>8、当全表扫描速度比索引速度快时，mysql会使用全表扫描，此时索引失效。</p><p>索引失效分析工具：</p><p>可以使用 explain 命令加在要分析的 sql 语句前面，在执行结果中查看 key 这一列的值，如果为 NULL，说明没有使用索引。</p><p>explain 命令的详细用法，可以查看这篇文章：<a href="https://segmentfault.com/a/1190000008131735">https://segmentfault.com/a/1190000008131735</a></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;首先，复习一下索引的创建：&lt;/p&gt;
+&lt;p&gt;普通的索引的创建&lt;/p&gt;
+&lt;figure class=&quot;highlight sql&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;</summary>
+      
+    
+    
+    
+    <category term="技术学习" scheme="https://dd-code.site/categories/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/"/>
+    
+    <category term="MySQL" scheme="https://dd-code.site/categories/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/MySQL/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>MySQL索引类型</title>
+    <link href="https://dd-code.site/post/1647528259.html"/>
+    <id>https://dd-code.site/post/1647528259.html</id>
+    <published>2021-07-26T03:23:17.307Z</published>
+    <updated>2021-08-10T15:50:26.793Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="1：普通索引"><a href="#1：普通索引" class="headerlink" title="1：普通索引"></a>1：普通索引</h2><p>这是最基本的索引，它没有任何限制，比如某个字段创建的索引就是一个普通索引，MyISAM 默认的 BTREE 类型的索引，也是我们大多数情况下用到的索引。</p><p>直接创建索引</p><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> INDEX index_name <span class="keyword">ON</span> <span class="keyword">TABLE</span>(<span class="keyword">column</span>(lehgth))</span><br></pre></td></tr></table></figure><p>修改表结构的方式添加索引</p><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> table_name <span class="keyword">ADD</span> INDEX index_name <span class="keyword">ON</span> (<span class="keyword">column</span>(length))</span><br></pre></td></tr></table></figure><p>创建表的时候同时创建索引</p><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="string">&#x27;TABLE&#x27;</span> (</span><br><span class="line">  <span class="string">&#x27;id&#x27;</span> <span class="type">int</span>(<span class="number">11</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> AUTO_INCREMENT,</span><br><span class="line">  <span class="string">&#x27;title&#x27;</span> <span class="type">char</span>(<span class="number">255</span>) <span class="type">CHARACTER</span> <span class="keyword">SET</span> UTF8 <span class="keyword">COLLATE</span> utf8_general_ci <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">  <span class="string">&#x27;content&#x27;</span> text <span class="type">CHARACTER</span> <span class="keyword">SET</span> UTF8 <span class="keyword">COLLATE</span> utf8_general_ci <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">  <span class="string">&#x27;time&#x27;</span> <span class="type">int</span>(<span class="number">10</span>) <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span>,</span><br><span class="line"><span class="keyword">PRIMARY</span> KEYo(<span class="string">&#x27;id&#x27;</span>),</span><br><span class="line">INDEX index_name(title(length))</span><br><span class="line">)</span><br></pre></td></tr></table></figure><p>删除索引</p><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DROP</span> INDEX INDEX_NAME <span class="keyword">ON</span> <span class="keyword">table</span></span><br></pre></td></tr></table></figure><h2 id="2：唯一索引"><a href="#2：唯一索引" class="headerlink" title="2：唯一索引"></a>2：唯一索引</h2><p>与普通索引类似，不同的就是：索引列的值必须唯一，但允许有空值（注意和主键不同）。如果是组合索引，则列值得组合必须唯一，创建方法和普通索类似。</p><p>创建唯一索引</p><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">UNIQUE</span> INDEX index_name <span class="keyword">ON</span> <span class="keyword">TABLE</span>(columm(length))</span><br></pre></td></tr></table></figure><p>修改表结构</p><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> table_name <span class="keyword">ADD</span> <span class="keyword">UNIQUE</span> index_name <span class="keyword">ON</span> (<span class="keyword">column</span>(length))</span><br></pre></td></tr></table></figure><p>创建表的时候直接指定</p><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="string">&#x27;TABLE&#x27;</span>(</span><br><span class="line">  <span class="string">&#x27;id&#x27;</span> <span class="type">int</span>(<span class="number">11</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> AUTO_INCREMENT,</span><br><span class="line">  <span class="string">&#x27;title&#x27;</span> <span class="type">char</span>(<span class="number">255</span>) <span class="type">CHARACTER</span> <span class="keyword">SET</span> utf8 <span class="keyword">COLLATE</span> utf8_general_ci <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">  <span class="string">&#x27;content&#x27;</span> text <span class="type">CHARACTER</span> <span class="keyword">SET</span> utf8 <span class="keyword">COLLATE</span> utf8_general_ci <span class="keyword">NULL</span>,</span><br><span class="line">  <span class="string">&#x27;time&#x27;</span> <span class="type">int</span>(<span class="number">10</span>) <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span>,</span><br><span class="line"><span class="keyword">PRIMARY</span> KEY(<span class="string">&#x27;id&#x27;</span>),</span><br><span class="line"><span class="keyword">UNIQUE</span> index_name (titlt(length))</span><br><span class="line">)</span><br></pre></td></tr></table></figure><h2 id="3：全文索引"><a href="#3：全文索引" class="headerlink" title="3：全文索引"></a>3：全文索引</h2><p>对于较大的数据集，将你的资料输入一个没有 <code>FULLTEXT</code> 索引的表中，然后创建索引，其速度比把资料输入现有 <code>FULLTEXT</code>索引的速度更为快。不过对于大容量的数据表，生成全文索引是一个消耗时间非常消耗硬盘空间的做法。</p><p>创建表的时候添加全文索引</p><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="string">&#x27;TABLE&#x27;</span>(</span><br><span class="line">  <span class="string">&#x27;id&#x27;</span> <span class="type">int</span>(<span class="number">11</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> AUTO_INCREMENT,</span><br><span class="line">  <span class="string">&#x27;title&#x27;</span> <span class="type">char</span>(<span class="number">255</span>) <span class="type">CHARACTER</span> <span class="keyword">SET</span> utf8 <span class="keyword">COLLATE</span> utf8_general_ci <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">  <span class="string">&#x27;content&#x27;</span> text <span class="type">CHARACTER</span> <span class="keyword">SET</span> utf8 <span class="keyword">COLLATE</span> utf8_general_ci <span class="keyword">NULL</span>,</span><br><span class="line">  <span class="string">&#x27;time&#x27;</span> <span class="type">int</span>(<span class="number">10</span>) <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span>,</span><br><span class="line">  <span class="keyword">PRIMARY</span> KEY (<span class="string">&#x27;id&#x27;</span>),</span><br><span class="line">  FULLTEXT (content)</span><br><span class="line">)</span><br></pre></td></tr></table></figure><p>修改表结构添加全文索引</p><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> article <span class="keyword">ADD</span> FULLTEXT index_content(content)</span><br></pre></td></tr></table></figure><p>直接创建索引</p><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> FULLTEXT INDEX index_content <span class="keyword">ON</span> article(content)</span><br></pre></td></tr></table></figure><h2 id="4：单列索引、多列索引"><a href="#4：单列索引、多列索引" class="headerlink" title="4：单列索引、多列索引"></a>4：单列索引、多列索引</h2><p>多个单列索引与单个单列索引的查询效果不同，因为执行查询时，MySQL 只能使用一个索引，会从多个索引中选择一个限制最为严格的索引。</p><h2 id=""><a href="#" class="headerlink" title=""></a></h2><h2 id="5：组合索引（最左前缀）"><a href="#5：组合索引（最左前缀）" class="headerlink" title="5：组合索引（最左前缀）"></a>5：组合索引（最左前缀）</h2><p>平时用的 SQL 查询语句一般都有比较多的限制条件，所以为了进一步榨取 MySQL 的效率，就要考虑简历组合索引。</p><p>比如：针对 title 和 time 建立一个组合索引</p><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> article <span class="keyword">ADD</span> INDEX index_title_time(title(<span class="number">50</span>),<span class="type">time</span>(<span class="number">10</span>))</span><br></pre></td></tr></table></figure><p>建立这样的组合索引，其实相当于分别建立了下面两组组合索引：</p><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="operator">-</span>title,<span class="type">time</span></span><br><span class="line"><span class="operator">-</span>title</span><br></pre></td></tr></table></figure><p>为什么没有 <code>time</code> 这样的组合索引呢？这是因为 MySQL 组合索引“最左前缀”的结果。简单理解就是只从最左面的开始组合。并不是只要包含这两列的查询都会用到该组合索引，如下面几个 SQL 所示：</p><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 使用上面的索引</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> article <span class="keyword">WHERE</span> title<span class="operator">=</span><span class="string">&#x27;测试&#x27;</span> <span class="keyword">AND</span> <span class="type">time</span><span class="operator">=</span><span class="number">123456789</span>;</span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> article <span class="keyword">WHERE</span> title<span class="operator">=</span><span class="string">&#x27;测试&#x27;</span>;</span><br><span class="line"><span class="comment">-- 不适用上面的索引</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> article <span class="keyword">WHERE</span> <span class="type">time</span><span class="operator">=</span><span class="number">123456789</span>;</span><br></pre></td></tr></table></figure><h2 id="MySQL-索引的优化"><a href="#MySQL-索引的优化" class="headerlink" title="MySQL 索引的优化"></a>MySQL 索引的优化</h2><p>上面都在说使用索引的好处，但过多的使用索引将会造成滥用。因此索引也会有其它的缺点：虽然索引大大提高了查询速度，同时却会降低更新表的速度，如对表进行 <code>INSERT</code>、<code>UPDATE</code>、<code>DELETE</code>。因为更新表时，MySQL 不仅要保存数据，还要保存一下索引文件。建立索引文件会占用磁盘空间的索引文件。一般情况下这个问题不太严重，但如果你在一个大表中创建了多种组合索引，索引文件会膨胀的很快。索引只是提高效率的一个因素，如果你的 MySQL 有大数据量的表，就需要花时间研究建立最优秀的索引，或优化查询语句。</p><h3 id="1：何时使用聚集索引或非聚集索引？"><a href="#1：何时使用聚集索引或非聚集索引？" class="headerlink" title="1：何时使用聚集索引或非聚集索引？"></a>1：何时使用聚集索引或非聚集索引？</h3><table><thead><tr><th>动作描述</th><th>使用聚集索引</th><th>使用非聚集索引</th></tr></thead><tbody><tr><td>列经常被分组排序</td><td>使用</td><td>使用</td></tr><tr><td>返回某范围内的数据</td><td>使用</td><td>不使用</td></tr><tr><td>一个或极少不同值</td><td>不使用</td><td>不使用</td></tr><tr><td>小数目的不同值</td><td>使用</td><td>不使用</td></tr><tr><td>大数目的不同值</td><td>不使用</td><td>使用</td></tr><tr><td>频繁更新的列</td><td>不使用</td><td>使用</td></tr><tr><td>外键列</td><td>使用</td><td>使用</td></tr><tr><td>主键列</td><td>使用</td><td>使用</td></tr><tr><td>频繁修改索引列</td><td>不使用</td><td>使用</td></tr></tbody></table><p>还需再研究下….</p><h3 id="2：索引不会包含有-null-值得列"><a href="#2：索引不会包含有-null-值得列" class="headerlink" title="2：索引不会包含有 null 值得列"></a>2：索引不会包含有 null 值得列</h3><p>只要列中包含有 null 值都将不会被包含在索引中，复合索引中只要有一列含有 null 值，那么这一列对于此复合索引就是无效的。所以我们在数据库设计时不要让字段的默认值为 NULL。</p><h3 id="3：使用短索引"><a href="#3：使用短索引" class="headerlink" title="3：使用短索引"></a>3：使用短索引</h3><p>对串列进行索引，如果可能应该指定一个前缀长度。例如：</p><p>如果有一个 CHAR(255) 的列，如果在前10个或20个字符内，多数值是唯一的，那么就不要对整个列进行索引。短索引不仅可以提高查询速度而且还可以节省磁盘空间和 I/O 操作。</p><h3 id="4：索引列排序"><a href="#4：索引列排序" class="headerlink" title="4：索引列排序"></a>4：索引列排序</h3><p>MySQL 查询只使用一个索引，因此如果 <code>where</code> 子句中已经使用了索引的话，那么 <code>order by</code> 中的列是不会使用索引的。因此数据库默认排序可以符合要求的情况下不要使用排序操作；尽量不要包含多个列的排序，如果需要最好给这里写列创建符合索引。</p><h3 id="5：like-语句操作"><a href="#5：like-语句操作" class="headerlink" title="5：like 语句操作"></a>5：like 语句操作</h3><p>一般情况下不鼓励使用 <code>like</code> 操作，如果非使用不可，如何使用也是一个问题，比如：</p><p><code>like &quot;%aaa%&quot;</code> 不会使用索引而 <code>like &quot;aaa%&quot;</code> 可以使用索引。</p><h3 id="6：不要在列上使用运算"><a href="#6：不要在列上使用运算" class="headerlink" title="6：不要在列上使用运算"></a>6：不要在列上使用运算</h3><p>例如：</p><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> users <span class="keyword">WHERE</span> <span class="keyword">YEAR</span>(adddate) <span class="operator">&lt;</span> <span class="number">2007</span></span><br></pre></td></tr></table></figure><p>这个将在每个行上进行运算，导致索引失效而进行全表扫描，因此我们可以改成</p><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> users <span class="keyword">where</span> adddate <span class="operator">&lt;</span> <span class="string">&#x27;2007-01-01&#x27;</span></span><br></pre></td></tr></table></figure><blockquote><p>欣赏：<a href="https://www.zendstudio.net/archives/single-quotes-or-no-single-quotes-in-sql-query/">一个单引号引发的MYSQL性能损失</a></p></blockquote><h3 id="总结："><a href="#总结：" class="headerlink" title="总结："></a>总结：</h3><p>MySQL 只对以下操作符才使用索引：</p><p><code>&lt;</code>、<code>&lt;=</code>、<code>=</code>、&gt;、<code>&gt;=</code>、between、<code>in</code>，以及某些时候的 <code>like</code>（不以通配符 <code>%</code> 或 <code>_</code> 开头的情形），而理论上每张表里面最多可创建 16 个索引，不过除非数据是真的多，否则过多使用索引也不行。</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;1：普通索引&quot;&gt;&lt;a href=&quot;#1：普通索引&quot; class=&quot;headerlink&quot; title=&quot;1：普通索引&quot;&gt;&lt;/a&gt;1：普通索引&lt;/h2&gt;&lt;p&gt;这是最基本的索引，它没有任何限制，比如某个字段创建的索引就是一个普通索引，MyISAM 默认的 BTREE </summary>
+      
+    
+    
+    
+    <category term="技术学习" scheme="https://dd-code.site/categories/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/"/>
+    
+    <category term="MySQL" scheme="https://dd-code.site/categories/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/MySQL/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>MySQL常见问题</title>
+    <link href="https://dd-code.site/post/445316081.html"/>
+    <id>https://dd-code.site/post/445316081.html</id>
+    <published>2021-07-26T03:23:17.306Z</published>
+    <updated>2021-08-10T15:50:26.904Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="（一）死锁"><a href="#（一）死锁" class="headerlink" title="（一）死锁"></a>（一）死锁</h2><h3 id="问题原因"><a href="#问题原因" class="headerlink" title="问题原因"></a>问题原因</h3><p>随着线上流量的变大，突然开始报如下异常，就是发生了死锁问题：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Deadlock found when trying to get lock; try restarting transaction ;</span><br></pre></td></tr></table></figure><h3 id="问题分析"><a href="#问题分析" class="headerlink" title="问题分析"></a>问题分析</h3><p>查询事务的隔离级别</p><p>利用 <code>select @@tx_isolation</code> 命令获取到数据库隔离级别信息。</p><p><img src="https://cdn.dd-code.site/PicGo/20201110090224.png"></p><p>查询数据库的死锁日志，利用 <code>show engine innodb status</code> 命令获取到如下死锁信息：</p><p><img src="https://cdn.dd-code.site/PicGo/20201110090308.png"></p><p><img src="https://cdn.dd-code.site/PicGo/20201110090320.png"></p><p>由上可知，是由于两个事物对这条记录同时持有S锁(共享锁)的情况下，再次尝试获取该条记录的X锁(排它锁)，从而导致互相等待引发死锁</p><h3 id="获得结论"><a href="#获得结论" class="headerlink" title="获得结论"></a>获得结论</h3><p>分析获得产生问题的加锁时如下，然后修改代码以解决该问题。</p><p><img src="https://cdn.dd-code.site/PicGo/20201110090627.png"></p><h2 id="（二）慢SQL"><a href="#（二）慢SQL" class="headerlink" title="（二）慢SQL"></a>（二）慢SQL</h2><h3 id="问题出现"><a href="#问题出现" class="headerlink" title="问题出现"></a>问题出现</h3><p>应用的 TPS 下降，并出现 SQL 执行超时异常或者出现了类似如下的告警信息，则常常意味着出现了慢 SQL。</p><p><img src="https://cdn.dd-code.site/PicGo/20201110090851.png"></p><h3 id="问题分析-1"><a href="#问题分析-1" class="headerlink" title="问题分析"></a>问题分析</h3><p>分析执行计划：利用 <code>explain</code> 指令获得该 SQL 语句的执行计划，根据该执行计划，可能有两种场景。</p><ul><li>SQL 不走索引或扫描行数过多等，导致执行时长过长</li><li>SQL 没问题，只是因为事务并发导致等待锁，导致执行时长过长</li></ul><h4 id="场景一（SQL-不走索引或扫描行数过多等，导致执行时长过长）的解决方案"><a href="#场景一（SQL-不走索引或扫描行数过多等，导致执行时长过长）的解决方案" class="headerlink" title="场景一（SQL 不走索引或扫描行数过多等，导致执行时长过长）的解决方案"></a>场景一（SQL 不走索引或扫描行数过多等，导致执行时长过长）的解决方案</h4><h5 id="优化SQL"><a href="#优化SQL" class="headerlink" title="优化SQL"></a>优化SQL</h5><p>通过增加索引，调整 SQL 语句的方式优化执行时长，例如以下执行计划：</p><p><img src="https://cdn.dd-code.site/PicGo/20201110091527.png"></p><p>该 SQL 的执行计划的 TYPE 为 ALL，同时根据以下 type 予以，可知无索引的全表查询，可以判断为其检索列增加索引可以解决。</p><p><img src="https://cdn.dd-code.site/PicGo/20201110091706.png"></p><h4 id="场景二（SQL-没问题，只是因为事务并发导致等待锁，导致执行时长过长）的解决方案"><a href="#场景二（SQL-没问题，只是因为事务并发导致等待锁，导致执行时长过长）的解决方案" class="headerlink" title="场景二（SQL 没问题，只是因为事务并发导致等待锁，导致执行时长过长）的解决方案"></a>场景二（SQL 没问题，只是因为事务并发导致等待锁，导致执行时长过长）的解决方案</h4><h4 id="查询当前事务情况"><a href="#查询当前事务情况" class="headerlink" title="查询当前事务情况"></a>查询当前事务情况</h4><p>可以通过查看如下 3 张表做相应的处理：</p><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 当前运行的所有事务</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span>  <span class="keyword">FROM</span> information_schema.innodb_trx;</span><br><span class="line"><span class="comment">-- 当前出现的锁</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> information_schema.INNODB_LOCKS;</span><br><span class="line"><span class="comment">-- 锁等待的对应关系</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span>  <span class="keyword">FROM</span> information_schema.INNODB_LOCK_WAITS;</span><br></pre></td></tr></table></figure><h6 id="（1）查看当前的事务有哪些："><a href="#（1）查看当前的事务有哪些：" class="headerlink" title="（1）查看当前的事务有哪些："></a>（1）查看当前的事务有哪些：</h6><p><img src="https://cdn.dd-code.site/PicGo/20201110092302.png"></p><h6 id="（2）查看事务锁类型索引的详细信息："><a href="#（2）查看事务锁类型索引的详细信息：" class="headerlink" title="（2）查看事务锁类型索引的详细信息："></a>（2）查看事务锁类型索引的详细信息：</h6><p><img src="https://cdn.dd-code.site/PicGo/20201110092351.png"></p><p><code>look_table</code> 字段能看到被锁的索引的表名，<code>lock_model</code> 可以看到锁类型是 <code>X</code> 锁，lock_type 可以看到是行锁 <code>record</code> 。</p><h4 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h4><p>根据事务情况，得到表信息，和相关的事务时序信息：</p><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> IF <span class="keyword">EXISTS</span> `emp`;</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> `emp` (</span><br><span class="line">`id` <span class="type">int</span>(<span class="number">11</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> AUTO_INCREMENT,</span><br><span class="line">`salary` <span class="type">int</span>(<span class="number">10</span>) <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span>,</span><br><span class="line">`name` <span class="type">varchar</span>(<span class="number">255</span>) <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span>,</span><br><span class="line"><span class="keyword">PRIMARY</span> KEY (`id`),</span><br><span class="line">KEY `idx_name` (`name`(<span class="number">191</span>)) <span class="keyword">USING</span> BTREE</span><br><span class="line">) ENGINE<span class="operator">=</span>InnoDB AUTO_INCREMENT<span class="operator">=</span><span class="number">6</span> <span class="keyword">DEFAULT</span> CHARSET<span class="operator">=</span>utf8mb4;</span><br></pre></td></tr></table></figure><p>A 事务锁住一条记录，不提交，B 事务需要更新此条记录，此时会阻塞，如下图是执行顺序：</p><p><img src="https://cdn.dd-code.site/PicGo/20201110092720.png"></p><h4 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h4><h5 id="（一）修改方案"><a href="#（一）修改方案" class="headerlink" title="（一）修改方案"></a>（一）修改方案</h5><p>由前一步的结果，分析事务间加锁时序，例如可以通过 <code>tx_query</code> 字段得知被阻塞的事务 SQL，<code>trx_state</code> 得知事务状态等，找到对应的代码逻辑，进行优化修改。</p><h5 id="（二）临时修改方案"><a href="#（二）临时修改方案" class="headerlink" title="（二）临时修改方案"></a>（二）临时修改方案</h5><p><code>trx_mysql_thread_id</code> 是对应的事务 <code>sessionId</code>，可以通过以下命令杀死上时间执行的命令，从而避免阻塞其他事务执行。</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kill 105853</span><br></pre></td></tr></table></figure><h2 id="（三）连接数过多"><a href="#（三）连接数过多" class="headerlink" title="（三）连接数过多"></a>（三）连接数过多</h2><h3 id="问题出现-1"><a href="#问题出现-1" class="headerlink" title="问题出现"></a>问题出现</h3><p>常出现 <code>too many connections </code> 异常，数据库连接到达最大连接数。</p><h3 id="解决方案-1"><a href="#解决方案-1" class="headerlink" title="解决方案"></a>解决方案</h3><p>解决方案</p><ul><li>通过 <code>set global max_connections=XXX</code> 增大最大连接数</li><li>先利用 <code>show processlist</code> 获取连接信息，然后利用 kill 杀死过多的连接</li></ul><p>常用脚本如下</p><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">排序数据库连接的数目 </span><br><span class="line">mysql <span class="operator">-</span>h127<span class="number">.0</span><span class="number">.0</span><span class="number">.0</span><span class="number">.1</span> <span class="operator">-</span>uabc_test <span class="operator">-</span>pXXXXX <span class="operator">-</span>P3306 <span class="operator">-</span>A <span class="operator">-</span>e <span class="string">&#x27;show processlist&#x27;</span><span class="operator">|</span> awk <span class="string">&#x27;&#123;print $4&#125;&#x27;</span><span class="operator">|</span>sort<span class="operator">|</span>uniq <span class="operator">-</span>c<span class="operator">|</span>sort <span class="operator">-</span>rn<span class="operator">|</span>head <span class="number">-10</span></span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;（一）死锁&quot;&gt;&lt;a href=&quot;#（一）死锁&quot; class=&quot;headerlink&quot; title=&quot;（一）死锁&quot;&gt;&lt;/a&gt;（一）死锁&lt;/h2&gt;&lt;h3 id=&quot;问题原因&quot;&gt;&lt;a href=&quot;#问题原因&quot; class=&quot;headerlink&quot; title=&quot;问题原因&quot;</summary>
+      
+    
+    
+    
+    <category term="技术学习" scheme="https://dd-code.site/categories/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/"/>
+    
+    <category term="MySQL" scheme="https://dd-code.site/categories/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/MySQL/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>MySQL查询重复的数据</title>
+    <link href="https://dd-code.site/post/961775144.html"/>
+    <id>https://dd-code.site/post/961775144.html</id>
+    <published>2021-07-26T03:23:17.306Z</published>
+    <updated>2021-08-10T15:50:26.793Z</updated>
+    
+    <content type="html"><![CDATA[<p>查询字段 fund_id 重复的数据</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">SELECT * FROM fund a WHERE (a.fund_id) IN (</span><br><span class="line">SELECT fund_id FROM fund GROUP BY fund_id HAVING count(*)&gt; 1);</span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;查询字段 fund_id 重复的数据&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;lin</summary>
+      
+    
+    
+    
+    <category term="技术学习" scheme="https://dd-code.site/categories/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/"/>
+    
+    <category term="MySQL" scheme="https://dd-code.site/categories/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/MySQL/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>MySQL索引和存储引擎</title>
+    <link href="https://dd-code.site/post/70487411.html"/>
+    <id>https://dd-code.site/post/70487411.html</id>
+    <published>2021-07-26T03:23:17.306Z</published>
+    <updated>2021-08-10T15:50:26.794Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h2><h3 id="MySQL-不同的存储引擎"><a href="#MySQL-不同的存储引擎" class="headerlink" title="MySQL 不同的存储引擎"></a>MySQL 不同的存储引擎</h3><p><img src="https://cdn.dd-code.site/PicGo/20201110143846.png"></p><h3 id="InnoDB-B-Tree-索引实现"><a href="#InnoDB-B-Tree-索引实现" class="headerlink" title="InnoDB B+Tree 索引实现"></a>InnoDB B+Tree 索引实现</h3><p>主键索引（聚集索引）：</p><ul><li>叶子节点 <code>data</code> 域保存了完整的数据的地址</li><li>主键和数据完全存在一棵树上</li><li>Root 节点常驻内存</li><li>每个非叶子节点一个 <code>innodb_page_size</code> 大小，加速磁盘 <code>IO</code></li><li>磁盘的 <code>IO</code> 要比内存慢几百倍，而磁盘慢的原因在于机械设备寻找磁盘慢，因此采用磁盘预读，每次读取一个磁盘页（计算机管理存储器的逻辑快-通常为4k）的整倍数</li><li>如果没有主键，MySQL 默认生成隐含字段作为主键，这个字段长度为 6 个字节，类型为长整形</li><li>辅助索引结构和主索引相同，但叶子节点 <code>data</code> 域保存的是主键指针</li><li>InnnoDB 以表空间 Tablespace（idb文件）结构进行组织，每个 Tbalespace 包含多个 Segment 段</li><li>每个段（分为2种段：叶子节点 Segment &amp; 非叶子节点 Segment），一个 Segment 段包含多个 Extent</li><li>一个 Extent 占用 1M 空间包含 64 个 Page（每个Page 16k），InnoDB 的 B-Tree 一个逻辑节点就分配一个物理 Page，一个节点一次 IO 操作</li><li> 一个 Page 里包含很多有序数据 Row 行数据，Row 行数据中包含 Filed 属性数据等信息</li></ul><p>InnoDB 存储引擎中页的大小为 16KB，一般表的主键类型为 INT（占用4个字节）或 BIGINT（占用8个字节），指针类型也一般为4或8个字节，也就是说一个页（B+Tree中的节点）中大概存储 16KB/(8B+8B)=1k个键值（因为是估值，为方便计算，这里的K的取值为[10]^3）.</p><p>也就是说一个深度为 3 的 <code>B+Tree</code> 索引可以维护 <code>10^3 * 10^3 * 10^3=10</code> 亿条记录。</p><p><img src="https://cdn.dd-code.site/PicGo/20201110150352.png"></p><p>每个索引的左指针都是比自己小的 索引/节点，右指针是大于自己的 索引/节点。</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;索引&quot;&gt;&lt;a href=&quot;#索引&quot; class=&quot;headerlink&quot; title=&quot;索引&quot;&gt;&lt;/a&gt;索引&lt;/h2&gt;&lt;h3 id=&quot;MySQL-不同的存储引擎&quot;&gt;&lt;a href=&quot;#MySQL-不同的存储引擎&quot; class=&quot;headerlink&quot; title=</summary>
+      
+    
+    
+    
+    <category term="技术学习" scheme="https://dd-code.site/categories/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/"/>
+    
+    <category term="MySQL" scheme="https://dd-code.site/categories/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/MySQL/"/>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>MySQL基础-小数类型</title>
+    <link href="https://dd-code.site/post/1724192415.html"/>
+    <id>https://dd-code.site/post/1724192415.html</id>
+    <published>2021-07-26T03:23:17.305Z</published>
+    <updated>2021-08-10T15:50:26.793Z</updated>
+    
+    <content type="html"><![CDATA[<p>MySQL 中使用浮点数和定点数来表示小数。</p><p>浮点类型有两种，分别是单精度浮点数 <code>float</code> 和双精度浮点数 <code>double </code> ；定点类型只有一种，就是 <code>decimal</code> 。</p><table><thead><tr><th>类型名称</th><th>说明</th><th>存储需求</th></tr></thead><tbody><tr><td>FLOAT</td><td>单精度浮点数</td><td>4 个字节</td></tr><tr><td>DOUBLE</td><td>双精度浮点数</td><td>8 个字节</td></tr><tr><td>DECIMAL (M, D)，DEC</td><td>压缩的“严格”定点数</td><td>M+2 个字节</td></tr></tbody></table><p><code>decimal</code> 类型不同于 <code>float</code> 和 <code>double </code>。<code>double </code> 实际上是以字符串的形式存放的，<code>decimal</code> 可能的最大取值范围与 <code>double </code> 相同，但是有效的取值范围由 <code>M</code> 和 <code>D</code> 决定。如果改变 <code>M</code> 而固定 <code>D</code>，则取值范围将随 <code>M</code> 的变大而变大。</p><p>从上表中可以看到，<code>decimal</code> 的存储空间并不是固定的，而由精度值 <code>M</code> 决定，占用 <code>M+2</code> 个字节。</p><p><code>float</code> 类型的取值范围如下：</p><ul><li>有符号的取值范围：<code>-3.402823466E+38 ～ -1.175494351E-38</code>。</li><li>无符号的取值范围：<code>0 和 -1.175494351E-38 ～ -3.402823466E+38</code>。</li></ul><p><code>double </code> 类型的取值范围如下：</p><ul><li>有符号的取值范围：<code>-1.7976931348623157E+308 ～ -2.2250738585072014E-308</code>。</li><li>无符号的取值范围：<code>0 和 -2.2250738585072014E-308 ～ -1.7976931348623157E+308</code>。</li></ul><blockquote><p>提示：不论是定点还是浮点类型，如果用户指定的精度超出精度范围，则会四舍五入进行处理。</p></blockquote><p><code>float</code> 和 <code>double</code> 在不指定精度时，默认会按照实际的精度（由计算机硬件和操作系统决定），<code>decimal</code> 如果不指定精度，默认为  <code>（10，0）</code>。</p><p>浮点数相对于定点数的优点是在长度一定的情况下，浮点数能够表示更大的范围；缺点是会引起精度问题。</p><blockquote><p>在 MySQL 中，定点数以字符串形式存储，在对精度要求比较高的时候（如货币、科学数据），使用 DECIMAL 的类型比较好，另外两个浮点数进行减法和比较运算时也容易出问题，所以在使用浮点数时需要注意，并尽量避免做浮点数比较。</p></blockquote>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;MySQL 中使用浮点数和定点数来表示小数。&lt;/p&gt;
+&lt;p&gt;浮点类型有两种，分别是单精度浮点数 &lt;code&gt;float&lt;/code&gt; 和双精度浮点数 &lt;code&gt;double &lt;/code&gt; ；定点类型只有一种，就是 &lt;code&gt;decimal&lt;/code&gt; 。&lt;/p&gt;
+&lt;</summary>
+      
+    
+    
+    
+    <category term="技术学习" scheme="https://dd-code.site/categories/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/"/>
+    
+    <category term="MySQL" scheme="https://dd-code.site/categories/%E6%8A%80%E6%9C%AF%E5%AD%A6%E4%B9%A0/MySQL/"/>
+    
+    
+  </entry>
+  
+</feed>

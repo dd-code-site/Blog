@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <meta charset="utf-8">
+    
+    <title>Category: 02-基本数据类型 | Coding花园</title>
+    
+    
+        <meta name="keywords" content="Coding花园" />
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta property="og:type" content="website">
+<meta property="og:title" content="Coding花园">
+<meta property="og:url" content="https://dd-code.site/categories/%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0/%E5%BB%96%E9%9B%AA%E5%B3%B0%E7%9A%84Java%E6%95%99%E7%A8%8B/02-%E5%9F%BA%E6%9C%AC%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/index.html">
+<meta property="og:site_name" content="Coding花园">
+<meta property="og:locale">
+<meta property="article:author" content="Dawson Liu">
+<meta name="twitter:card" content="summary">
+    
+
+    
+        <link rel="alternate" href="/atom.xml" title="Coding花园" type="application/atom+xml" />
+    
+
+    
+        <link rel="icon" href="/favicon.ico" />
+    
+
+    
+<link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+
+    
+<link rel="stylesheet" href="/libs/open-sans/styles.css">
+
+    
+<link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+
+    
+<script src="/libs/jquery/plugins/cookie/1.4.1/jquery.cookie.js"></script>
+
+    
+    
+        
+<link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+
+    
+    
+        
+<link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+
+    
+    
+    
+    
+
+
+    
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">Coding花园</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/">首页</a>
+                
+                    <a class="main-nav-link" href="/tags">标签</a>
+                
+                    <a class="main-nav-link" href="/archives">归档</a>
+                
+            </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="Type something..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/">首页</a></td>
+                
+                    <td><a class="main-nav-link" href="/tags">标签</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">归档</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+            
+                <aside id="sidebar">
+   
+        
+    <div class="widget-wrap" id='categories'>
+        <h3 class="widget-title">
+            <span>categories</span>
+            &nbsp;
+            <a id='allExpand' href="#">
+                <i class="fa fa-angle-double-down fa-2x"></i>
+            </a>
+        </h3>
+        
+        
+        
+         <ul class="unstyled" id="tree" > 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            分享收藏
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/2127643338.html">不错的在线学习平台</a></li>  <li class="file"><a href="/post/659461921.html">Go进阶训练营课程大纲学习体系</a></li>  <li class="file"><a href="/post/1891777730.html">高级 Go 工程师岗位职责</a></li>  <li class="file"><a href="/post/1354050835.html">豆瓣电影 Top250 榜单</a></li>  <li class="file"><a href="/post/2127643338.html">不错的在线学习平台</a></li>  <li class="file"><a href="/post/1628566266.html">优秀的博主站点</a></li>  <li class="file"><a href="/post/651811465.html">架构图模板</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            技术学习
+                        </a>
+                         <ul class="unstyled" id="tree" > 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            Docker
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/2104589309.html">Docker命令详解（run篇）</a></li>  <li class="file"><a href="/post/564644262.html">Docker相关命令</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            LeetCode
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/3220316175.html">一个很好地leetcode项目</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            Mongo
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/1691421171.html">mongo常用命令</a></li>  <li class="file"><a href="/post/1323723771.html">mongo数据库角色</a></li>  <li class="file"><a href="/post/3140326379.html">mongo新建用户</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            MySQL
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/4025057969.html">MyISAM和InnoDB的区别</a></li>  <li class="file"><a href="/post/748313607.html">MySQL优化</a></li>  <li class="file"><a href="/post/1213461122.html">MySQL千万级大数据量查询优化</a></li>  <li class="file"><a href="/post/1724192415.html">MySQL基础-小数类型</a></li>  <li class="file"><a href="/post/1988337205.html">MySQL基础-整数类型</a></li>  <li class="file"><a href="/post/445316081.html">MySQL常见问题</a></li>  <li class="file"><a href="/post/961775144.html">MySQL查询重复的数据</a></li>  <li class="file"><a href="/post/70487411.html">MySQL索引和存储引擎</a></li>  <li class="file"><a href="/post/548465112.html">MySQL索引失效情况</a></li>  <li class="file"><a href="/post/1647528259.html">MySQL索引类型</a></li>  <li class="file"><a href="/post/1868093003.html">事务的四个特性</a></li>  <li class="file"><a href="/post/2178661577.html">使用MySqlDump备份</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            Oracle
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/1452475922.html">Centos7下Oracle19c的安装</a></li>  <li class="file"><a href="/post/3032572741.html">docker安装oracle19c</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            Redis
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/295621084.html">Redis持久化</a></li>  <li class="file"><a href="/post/1349846639.html">Redis数据类型比较和使用场景</a></li>  <li class="file"><a href="/post/1685059487.html">Redis设置密码</a></li>  <li class="file"><a href="/post/1058490118.html">安装SSDB</a></li>  <li class="file"><a href="/post/1099414406.html">了解Redis</a></li>  <li class="file"><a href="/post/894376550.html">缓存Memcache和Redis的区别</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            Service
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/82110573.html">linux系统scp文件传输</a></li>  <li class="file"><a href="/post/1879866913.html">Ubuntu防火墙的使用和开放关闭端口</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            数据库
+                        </a>
+                         <ul class="unstyled" id="tree" > 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            Memcache
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/2253204330.html">了解Memcache</a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            算法
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/2235748871.html">冒泡排序解析</a></li>  <li class="file"><a href="/post/1591159457.html">c1</a></li>  <li class="file"><a href="/post/3516134866.html">国外一个学习算法很好的网站</a></li>  <li class="file"><a href="/post/1991213779.html">两两对比算法</a></li>  <li class="file"><a href="/post/2235748871.html">冒泡排序解析</a></li>  <li class="file"><a href="/post/1898961614.html">编码-冒泡排序</a></li>  <li class="file"><a href="/post/73634619.html">检查给定数组是否成对排序</a></li>  <li class="file"><a href="/post/2412115213.html">快速排序解析</a></li>  <li class="file"><a href="/post/570953535.html">编码-快排算法</a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            每日一课
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/2648367562.html">2019年必学的DevOps流行工具</a></li>  <li class="file"><a href="/post/3792249270.html">二维码扫描登录是什么原理</a></li>  <li class="file"><a href="/post/495014278.html">如何快速对应用系统做一个360度的画像诊断</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            编程语言
+                        </a>
+                         <ul class="unstyled" id="tree" > 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            PHP
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/1171510126.html">PHP-FPM是什么</a></li>  <li class="file"><a href="/post/4276646924.html">PHP-FPM的三种运行模式</a></li>  <li class="file"><a href="/post/2140386669.html">PHP 中self、static、$this的区别&后期静态绑定详解</a></li>  <li class="file"><a href="/post/886155297.html">PHP基础-数据类型-boolean</a></li>  <li class="file"><a href="/post/4235469996.html">PHP基础-数据类型-float</a></li>  <li class="file"><a href="/post/3247369179.html">PHP基础-数据类型-string</a></li>  <li class="file"><a href="/post/221785719.html">PHP基础-数据类型-integet</a></li>  <li class="file"><a href="/post/740536292.html">PHP基础-数据类型-string和int比较</a></li>  <li class="file"><a href="/post/2518559853.html">PHP基础-数据类型</a></li>  <li class="file"><a href="/post/1503101483.html">PHP字符串函数</a></li>  <li class="file"><a href="/post/2916108243.html">PHP控制反转（IOC）和依赖注入（DI）</a></li>  <li class="file"><a href="/post/1247192045.html">PHP的垃圾回收机制-回收周期</a></li>  <li class="file"><a href="/post/2776614029.html">PHP的垃圾回收机制-引用计数</a></li>  <li class="file"><a href="/post/2943915566.html">PHP的垃圾回收机制-性能方面考虑的因素</a></li>  <li class="file"><a href="/post/512206887.html">PHP的垃圾回收机制</a></li>  <li class="file"><a href="/post/3981571320.html">PHP自动加载机制</a></li>  <li class="file"><a href="/post/137484498.html">self和$this的区别</a></li>  <li class="file"><a href="/post/2844724790.html">在Mac上使用Homebrew升级到PHP7.4</a></li>  <li class="file"><a href="/post/3712615104.html">如何使用brew安装多个PHP版本</a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            自考提升
+                        </a>
+                         <ul class="unstyled" id="tree" > 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            网络经济与企业管理
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/701979186.html">《网络经济与企业管理》第一次课</a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            课程学习
+                        </a>
+                         <ul class="unstyled" id="tree" > 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            22讲通关Go语言
+                        </a>
+                         <ul class="unstyled" id="tree" > 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            00-开篇词
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/188254796.html">开篇词</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            01-Go语言快速入门
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/1719467524.html">01 | 基础入门：编写你的第一个 Go 语言程序</a></li>  <li class="file"><a href="/post/239718908.html">04 | 数据类型：查找字符串</a></li>  <li class="file"><a href="/post/3069556377.html">03 | 数据类型：字符串和数字</a></li>  <li class="file"><a href="/post/2755664247.html">02 | 数据类型：变量的声明</a></li>  <li class="file"><a href="/post/1632346433.html">05 | 控制结构：If 条件语句</a></li>  <li class="file"><a href="/post/1946029743.html">06 | 控制结构：switch 选择语句</a></li>  <li class="file"><a href="/post/3410127306.html">07 | 控制结构：for 循环语句</a></li>  <li class="file"><a href="/post/1956865009.html">08 | 集合类型：Array（数组）</a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            廖雪峰的Java教程
+                        </a>
+                         <ul class="unstyled" id="tree" > 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            00-开篇词
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/188254797.html">开篇词</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            01-Java基础
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/2622184687.html">01|Java简介</a></li>  <li class="file"><a href="/post/3342559509.html">02|第一个Java程序</a></li>  <li class="file"><a href="/post/3119976000.html">03|Java程序基本结构</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            02-基本数据类型
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/860253879.html">01|变量和数据类型</a></li>  <li class="file"><a href="/post/117828488.html">02|基本数据类型的说明</a></li>  <li class="file"><a href="/post/3158030992.html">04|浮点型</a></li>  <li class="file"><a href="/post/3819373199.html">06|字符类型</a></li>  <li class="file"><a href="/post/2916864214.html">07|引用类型和常量</a></li>  <li class="file"><a href="/post/677245709.html">05|布尔类型</a></li>  <li class="file"><a href="/post/3232286694.html">03|整型</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            03-运算
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/2897062313.html">01|整数运算</a></li>  <li class="file"><a href="/post/2719730562.html">02|浮点数运算</a></li>  <li class="file"><a href="/post/1318299933.html">03|布尔运算</a></li>  <li class="file"><a href="/post/709319275.html">04|字符和字符串</a></li>  <li class="file"><a href="/post/3940022775.html">05|数组类型</a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                     </ul> 
+    </div>
+    <script>
+        $(document).ready(function() {
+            var iconFolderOpenClass  = 'fa-folder-open';
+            var iconFolderCloseClass = 'fa-folder';
+            var iconAllExpandClass = 'fa-angle-double-down';
+            var iconAllPackClass = 'fa-angle-double-up';
+            // Handle directory-tree expansion:
+            // 左键单独展开目录
+            $(document).on('click', '#categories a[data-role="directory"]', function (event) {
+                event.preventDefault();
+
+                var icon = $(this).children('.fa');
+                var expanded = icon.hasClass(iconFolderOpenClass);
+                var subtree = $(this).siblings('ul');
+                icon.removeClass(iconFolderOpenClass).removeClass(iconFolderCloseClass);
+                if (expanded) {
+                    if (typeof subtree != 'undefined') {
+                        subtree.slideUp({ duration: 100 });
+                    }
+                    icon.addClass(iconFolderCloseClass);
+                } else {
+                    if (typeof subtree != 'undefined') {
+                        subtree.slideDown({ duration: 100 });
+                    }
+                    icon.addClass(iconFolderOpenClass);
+                }
+            });
+            // 右键展开下属所有目录
+            $('#categories a[data-role="directory"]').bind("contextmenu", function(event){
+                event.preventDefault();
+                
+                var icon = $(this).children('.fa');
+                var expanded = icon.hasClass(iconFolderOpenClass);
+                var listNode = $(this).siblings('ul');
+                var subtrees = $.merge(listNode.find('li ul'), listNode);
+                var icons = $.merge(listNode.find('.fa'), icon);
+                icons.removeClass(iconFolderOpenClass).removeClass(iconFolderCloseClass);
+                if(expanded) {
+                    subtrees.slideUp({ duration: 100 });
+                    icons.addClass(iconFolderCloseClass);
+                } else {
+                    subtrees.slideDown({ duration: 100 });
+                    icons.addClass(iconFolderOpenClass);
+                }
+            })
+            // 展开关闭所有目录按钮
+            $(document).on('click', '#allExpand', function (event) {
+                event.preventDefault();
+                
+                var icon = $(this).children('.fa');
+                var expanded = icon.hasClass(iconAllExpandClass);
+                icon.removeClass(iconAllExpandClass).removeClass(iconAllPackClass);
+                if(expanded) {
+                    $('#sidebar .fa.fa-folder').removeClass('fa-folder').addClass('fa-folder-open')
+                    $('#categories li ul').slideDown({ duration: 100 });
+                    icon.addClass(iconAllPackClass);
+                } else {
+                    $('#sidebar .fa.fa-folder-open').removeClass('fa-folder-open').addClass('fa-folder')
+                    $('#categories li ul').slideUp({ duration: 100 });
+                    icon.addClass(iconAllExpandClass);
+                }
+            });  
+        });
+    </script>
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+            
+            <section id="main">
+<div class="timeline timeline-wrap">
+    <div class="timeline-row timeline-row-major">
+        <span class="node"><i class="fa fa-folder"></i></span>
+        <h1 class="title">02-基本数据类型</h1>
+    </div>
+    
+        <div class="timeline-row">
+            <span class="node"></span>
+            <div class="content">
+                
+    
+        <h1 itemprop="name">
+            <a class="timeline-article-title" href="/post/860253879.html">01|变量和数据类型</a>
+        </h1>
+    
+
+                <div class="article-meta">
+                    
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/post/860253879.html">
+            <time datetime="2021-05-25T16:00:00.000Z" itemprop="datePublished">2021-05-26</time>
+        </a>
+    </div>
+
+
+                    
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0/">课程学习</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0/%E5%BB%96%E9%9B%AA%E5%B3%B0%E7%9A%84Java%E6%95%99%E7%A8%8B/">廖雪峰的Java教程</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0/%E5%BB%96%E9%9B%AA%E5%B3%B0%E7%9A%84Java%E6%95%99%E7%A8%8B/02-%E5%9F%BA%E6%9C%AC%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/">02-基本数据类型</a>
+    </div>
+
+                    
+                </div>
+            </div>
+        </div>
+    
+        <div class="timeline-row">
+            <span class="node"></span>
+            <div class="content">
+                
+    
+        <h1 itemprop="name">
+            <a class="timeline-article-title" href="/post/117828488.html">02|基本数据类型的说明</a>
+        </h1>
+    
+
+                <div class="article-meta">
+                    
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/post/117828488.html">
+            <time datetime="2021-05-25T16:00:00.000Z" itemprop="datePublished">2021-05-26</time>
+        </a>
+    </div>
+
+
+                    
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0/">课程学习</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0/%E5%BB%96%E9%9B%AA%E5%B3%B0%E7%9A%84Java%E6%95%99%E7%A8%8B/">廖雪峰的Java教程</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0/%E5%BB%96%E9%9B%AA%E5%B3%B0%E7%9A%84Java%E6%95%99%E7%A8%8B/02-%E5%9F%BA%E6%9C%AC%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/">02-基本数据类型</a>
+    </div>
+
+                    
+                </div>
+            </div>
+        </div>
+    
+        <div class="timeline-row">
+            <span class="node"></span>
+            <div class="content">
+                
+    
+        <h1 itemprop="name">
+            <a class="timeline-article-title" href="/post/3158030992.html">04|浮点型</a>
+        </h1>
+    
+
+                <div class="article-meta">
+                    
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/post/3158030992.html">
+            <time datetime="2021-05-25T16:00:00.000Z" itemprop="datePublished">2021-05-26</time>
+        </a>
+    </div>
+
+
+                    
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0/">课程学习</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0/%E5%BB%96%E9%9B%AA%E5%B3%B0%E7%9A%84Java%E6%95%99%E7%A8%8B/">廖雪峰的Java教程</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0/%E5%BB%96%E9%9B%AA%E5%B3%B0%E7%9A%84Java%E6%95%99%E7%A8%8B/02-%E5%9F%BA%E6%9C%AC%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/">02-基本数据类型</a>
+    </div>
+
+                    
+                </div>
+            </div>
+        </div>
+    
+        <div class="timeline-row">
+            <span class="node"></span>
+            <div class="content">
+                
+    
+        <h1 itemprop="name">
+            <a class="timeline-article-title" href="/post/3819373199.html">06|字符类型</a>
+        </h1>
+    
+
+                <div class="article-meta">
+                    
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/post/3819373199.html">
+            <time datetime="2021-05-25T16:00:00.000Z" itemprop="datePublished">2021-05-26</time>
+        </a>
+    </div>
+
+
+                    
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0/">课程学习</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0/%E5%BB%96%E9%9B%AA%E5%B3%B0%E7%9A%84Java%E6%95%99%E7%A8%8B/">廖雪峰的Java教程</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0/%E5%BB%96%E9%9B%AA%E5%B3%B0%E7%9A%84Java%E6%95%99%E7%A8%8B/02-%E5%9F%BA%E6%9C%AC%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/">02-基本数据类型</a>
+    </div>
+
+                    
+                </div>
+            </div>
+        </div>
+    
+        <div class="timeline-row">
+            <span class="node"></span>
+            <div class="content">
+                
+    
+        <h1 itemprop="name">
+            <a class="timeline-article-title" href="/post/2916864214.html">07|引用类型和常量</a>
+        </h1>
+    
+
+                <div class="article-meta">
+                    
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/post/2916864214.html">
+            <time datetime="2021-05-25T16:00:00.000Z" itemprop="datePublished">2021-05-26</time>
+        </a>
+    </div>
+
+
+                    
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0/">课程学习</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0/%E5%BB%96%E9%9B%AA%E5%B3%B0%E7%9A%84Java%E6%95%99%E7%A8%8B/">廖雪峰的Java教程</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0/%E5%BB%96%E9%9B%AA%E5%B3%B0%E7%9A%84Java%E6%95%99%E7%A8%8B/02-%E5%9F%BA%E6%9C%AC%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/">02-基本数据类型</a>
+    </div>
+
+                    
+                </div>
+            </div>
+        </div>
+    
+        <div class="timeline-row">
+            <span class="node"></span>
+            <div class="content">
+                
+    
+        <h1 itemprop="name">
+            <a class="timeline-article-title" href="/post/677245709.html">05|布尔类型</a>
+        </h1>
+    
+
+                <div class="article-meta">
+                    
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/post/677245709.html">
+            <time datetime="2021-05-25T16:00:00.000Z" itemprop="datePublished">2021-05-26</time>
+        </a>
+    </div>
+
+
+                    
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0/">课程学习</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0/%E5%BB%96%E9%9B%AA%E5%B3%B0%E7%9A%84Java%E6%95%99%E7%A8%8B/">廖雪峰的Java教程</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0/%E5%BB%96%E9%9B%AA%E5%B3%B0%E7%9A%84Java%E6%95%99%E7%A8%8B/02-%E5%9F%BA%E6%9C%AC%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/">02-基本数据类型</a>
+    </div>
+
+                    
+                </div>
+            </div>
+        </div>
+    
+        <div class="timeline-row">
+            <span class="node"></span>
+            <div class="content">
+                
+    
+        <h1 itemprop="name">
+            <a class="timeline-article-title" href="/post/3232286694.html">03|整型</a>
+        </h1>
+    
+
+                <div class="article-meta">
+                    
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/post/3232286694.html">
+            <time datetime="2021-05-25T16:00:00.000Z" itemprop="datePublished">2021-05-26</time>
+        </a>
+    </div>
+
+
+                    
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0/">课程学习</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0/%E5%BB%96%E9%9B%AA%E5%B3%B0%E7%9A%84Java%E6%95%99%E7%A8%8B/">廖雪峰的Java教程</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0/%E5%BB%96%E9%9B%AA%E5%B3%B0%E7%9A%84Java%E6%95%99%E7%A8%8B/02-%E5%9F%BA%E6%9C%AC%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/">02-基本数据类型</a>
+    </div>
+
+                    
+                </div>
+            </div>
+        </div>
+    
+</div>
+</section>
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            Dawson Liu &copy; 2021 
+            <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/80x15.png" /></a>
+            <br> Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme - <a target="_blank" rel="noopener" href="https://github.com/zthxxx/hexo-theme-Wikitten">wikitten</a>
+            
+                <br>
+                <span id="busuanzi_container_site_pv"><i class="fa fa-eye"></i> <span id="busuanzi_value_site_pv"></span></span>
+                &nbsp;|&nbsp;
+                <span id="busuanzi_container_site_pv"><i class="fa fa-user"></i> <span id="busuanzi_value_site_uv"></span></span>
+            
+        </div>
+    </div>
+</footer>
+
+        
+
+    
+        
+<script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-share.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-video.min.js"></script>
+
+    
+    
+        
+<script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+
+    
+    
+        <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true,
+            TeX: {
+                equationNumbers: {
+                  autoNumber: 'AMS'
+                }
+            }
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script async src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+
+<script src="/js/main.js"></script>
+
+
+    </div>
+</body>
+</html>

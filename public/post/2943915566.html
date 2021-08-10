@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <meta charset="utf-8">
+    
+    <title>PHP的垃圾回收机制-性能方面考虑的因素 | Coding花园</title>
+    
+    
+        <meta name="keywords" content="PHP的垃圾回收机制-性能方面考虑的因素" />
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="性能方面考虑的因素在上一节我们已经简单的提到：回收可能根有细微的性能上影响，但这是把PHP 5.2与PHP 5.3比较时才有的。尽管在PHP 5.2中，记录可能根相对于完全不记录可能根要慢些，而PHP 5.3中对 PHP run-time 的其他修改减少了这个性能损失。 这里主要有两个领域对性能有影响。第一个是内存占用空间的节省，另一个是垃圾回收机制执行内存清理时的执行时间增加(run-time">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PHP的垃圾回收机制-性能方面考虑的因素">
+<meta property="og:url" content="https://dd-code.site/post/2943915566.html">
+<meta property="og:site_name" content="Coding花园">
+<meta property="og:description" content="性能方面考虑的因素在上一节我们已经简单的提到：回收可能根有细微的性能上影响，但这是把PHP 5.2与PHP 5.3比较时才有的。尽管在PHP 5.2中，记录可能根相对于完全不记录可能根要慢些，而PHP 5.3中对 PHP run-time 的其他修改减少了这个性能损失。 这里主要有两个领域对性能有影响。第一个是内存占用空间的节省，另一个是垃圾回收机制执行内存清理时的执行时间增加(run-time">
+<meta property="og:locale">
+<meta property="og:image" content="https://www.php.net/manual/zh/images/12f37b1c6963c1c5c18f30495416a197-gc-benchmark.png">
+<meta property="article:published_time" content="2021-07-26T03:23:17.288Z">
+<meta property="article:modified_time" content="2021-08-10T15:52:24.851Z">
+<meta property="article:author" content="Dawson Liu">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.php.net/manual/zh/images/12f37b1c6963c1c5c18f30495416a197-gc-benchmark.png">
+    
+
+    
+        <link rel="alternate" href="/atom.xml" title="Coding花园" type="application/atom+xml" />
+    
+
+    
+        <link rel="icon" href="/favicon.ico" />
+    
+
+    
+<link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+
+    
+<link rel="stylesheet" href="/libs/open-sans/styles.css">
+
+    
+<link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+
+    
+<script src="/libs/jquery/plugins/cookie/1.4.1/jquery.cookie.js"></script>
+
+    
+    
+        
+<link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+
+    
+    
+        
+<link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+
+    
+    
+    
+    
+
+
+    
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">Coding花园</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/">首页</a>
+                
+                    <a class="main-nav-link" href="/tags">标签</a>
+                
+                    <a class="main-nav-link" href="/archives">归档</a>
+                
+            </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="Type something..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/">首页</a></td>
+                
+                    <td><a class="main-nav-link" href="/tags">标签</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">归档</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+            
+                <aside id="sidebar">
+   
+        
+    <div class="widget-wrap" id='categories'>
+        <h3 class="widget-title">
+            <span>categories</span>
+            &nbsp;
+            <a id='allExpand' href="#">
+                <i class="fa fa-angle-double-down fa-2x"></i>
+            </a>
+        </h3>
+        
+        
+        
+         <ul class="unstyled" id="tree" > 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            分享收藏
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/2127643338.html">不错的在线学习平台</a></li>  <li class="file"><a href="/post/659461921.html">Go进阶训练营课程大纲学习体系</a></li>  <li class="file"><a href="/post/1891777730.html">高级 Go 工程师岗位职责</a></li>  <li class="file"><a href="/post/1354050835.html">豆瓣电影 Top250 榜单</a></li>  <li class="file"><a href="/post/2127643338.html">不错的在线学习平台</a></li>  <li class="file"><a href="/post/1628566266.html">优秀的博主站点</a></li>  <li class="file"><a href="/post/651811465.html">架构图模板</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            技术学习
+                        </a>
+                         <ul class="unstyled" id="tree" > 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            Docker
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/2104589309.html">Docker命令详解（run篇）</a></li>  <li class="file"><a href="/post/564644262.html">Docker相关命令</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            LeetCode
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/3220316175.html">一个很好地leetcode项目</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            Mongo
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/1691421171.html">mongo常用命令</a></li>  <li class="file"><a href="/post/1323723771.html">mongo数据库角色</a></li>  <li class="file"><a href="/post/3140326379.html">mongo新建用户</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            MySQL
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/4025057969.html">MyISAM和InnoDB的区别</a></li>  <li class="file"><a href="/post/748313607.html">MySQL优化</a></li>  <li class="file"><a href="/post/1213461122.html">MySQL千万级大数据量查询优化</a></li>  <li class="file"><a href="/post/1724192415.html">MySQL基础-小数类型</a></li>  <li class="file"><a href="/post/1988337205.html">MySQL基础-整数类型</a></li>  <li class="file"><a href="/post/445316081.html">MySQL常见问题</a></li>  <li class="file"><a href="/post/961775144.html">MySQL查询重复的数据</a></li>  <li class="file"><a href="/post/70487411.html">MySQL索引和存储引擎</a></li>  <li class="file"><a href="/post/548465112.html">MySQL索引失效情况</a></li>  <li class="file"><a href="/post/1647528259.html">MySQL索引类型</a></li>  <li class="file"><a href="/post/1868093003.html">事务的四个特性</a></li>  <li class="file"><a href="/post/2178661577.html">使用MySqlDump备份</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            Oracle
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/1452475922.html">Centos7下Oracle19c的安装</a></li>  <li class="file"><a href="/post/3032572741.html">docker安装oracle19c</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            Redis
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/295621084.html">Redis持久化</a></li>  <li class="file"><a href="/post/1349846639.html">Redis数据类型比较和使用场景</a></li>  <li class="file"><a href="/post/1685059487.html">Redis设置密码</a></li>  <li class="file"><a href="/post/1058490118.html">安装SSDB</a></li>  <li class="file"><a href="/post/1099414406.html">了解Redis</a></li>  <li class="file"><a href="/post/894376550.html">缓存Memcache和Redis的区别</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            Service
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/82110573.html">linux系统scp文件传输</a></li>  <li class="file"><a href="/post/1879866913.html">Ubuntu防火墙的使用和开放关闭端口</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            数据库
+                        </a>
+                         <ul class="unstyled" id="tree" > 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            Memcache
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/2253204330.html">了解Memcache</a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            算法
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/2235748871.html">冒泡排序解析</a></li>  <li class="file"><a href="/post/1591159457.html">c1</a></li>  <li class="file"><a href="/post/3516134866.html">国外一个学习算法很好的网站</a></li>  <li class="file"><a href="/post/1991213779.html">两两对比算法</a></li>  <li class="file"><a href="/post/2235748871.html">冒泡排序解析</a></li>  <li class="file"><a href="/post/1898961614.html">编码-冒泡排序</a></li>  <li class="file"><a href="/post/73634619.html">检查给定数组是否成对排序</a></li>  <li class="file"><a href="/post/2412115213.html">快速排序解析</a></li>  <li class="file"><a href="/post/570953535.html">编码-快排算法</a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            每日一课
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/2648367562.html">2019年必学的DevOps流行工具</a></li>  <li class="file"><a href="/post/3792249270.html">二维码扫描登录是什么原理</a></li>  <li class="file"><a href="/post/495014278.html">如何快速对应用系统做一个360度的画像诊断</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory open">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder-open"></i>
+                            &nbsp;
+                            编程语言
+                        </a>
+                         <ul class="unstyled" id="tree" > 
+                    <li class="directory open">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder-open"></i>
+                            &nbsp;
+                            PHP
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/1171510126.html">PHP-FPM是什么</a></li>  <li class="file"><a href="/post/4276646924.html">PHP-FPM的三种运行模式</a></li>  <li class="file"><a href="/post/2140386669.html">PHP 中self、static、$this的区别&后期静态绑定详解</a></li>  <li class="file"><a href="/post/886155297.html">PHP基础-数据类型-boolean</a></li>  <li class="file"><a href="/post/4235469996.html">PHP基础-数据类型-float</a></li>  <li class="file"><a href="/post/3247369179.html">PHP基础-数据类型-string</a></li>  <li class="file"><a href="/post/221785719.html">PHP基础-数据类型-integet</a></li>  <li class="file"><a href="/post/740536292.html">PHP基础-数据类型-string和int比较</a></li>  <li class="file"><a href="/post/2518559853.html">PHP基础-数据类型</a></li>  <li class="file"><a href="/post/1503101483.html">PHP字符串函数</a></li>  <li class="file"><a href="/post/2916108243.html">PHP控制反转（IOC）和依赖注入（DI）</a></li>  <li class="file"><a href="/post/1247192045.html">PHP的垃圾回收机制-回收周期</a></li>  <li class="file"><a href="/post/2776614029.html">PHP的垃圾回收机制-引用计数</a></li>  <li class="file active"><a href="/post/2943915566.html">PHP的垃圾回收机制-性能方面考虑的因素</a></li>  <li class="file"><a href="/post/512206887.html">PHP的垃圾回收机制</a></li>  <li class="file"><a href="/post/3981571320.html">PHP自动加载机制</a></li>  <li class="file"><a href="/post/137484498.html">self和$this的区别</a></li>  <li class="file"><a href="/post/2844724790.html">在Mac上使用Homebrew升级到PHP7.4</a></li>  <li class="file"><a href="/post/3712615104.html">如何使用brew安装多个PHP版本</a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            自考提升
+                        </a>
+                         <ul class="unstyled" id="tree" > 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            网络经济与企业管理
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/701979186.html">《网络经济与企业管理》第一次课</a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            课程学习
+                        </a>
+                         <ul class="unstyled" id="tree" > 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            22讲通关Go语言
+                        </a>
+                         <ul class="unstyled" id="tree" > 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            00-开篇词
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/188254796.html">开篇词</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            01-Go语言快速入门
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/1719467524.html">01 | 基础入门：编写你的第一个 Go 语言程序</a></li>  <li class="file"><a href="/post/239718908.html">04 | 数据类型：查找字符串</a></li>  <li class="file"><a href="/post/3069556377.html">03 | 数据类型：字符串和数字</a></li>  <li class="file"><a href="/post/2755664247.html">02 | 数据类型：变量的声明</a></li>  <li class="file"><a href="/post/1632346433.html">05 | 控制结构：If 条件语句</a></li>  <li class="file"><a href="/post/1946029743.html">06 | 控制结构：switch 选择语句</a></li>  <li class="file"><a href="/post/3410127306.html">07 | 控制结构：for 循环语句</a></li>  <li class="file"><a href="/post/1956865009.html">08 | 集合类型：Array（数组）</a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            廖雪峰的Java教程
+                        </a>
+                         <ul class="unstyled" id="tree" > 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            00-开篇词
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/188254797.html">开篇词</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            01-Java基础
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/2622184687.html">01|Java简介</a></li>  <li class="file"><a href="/post/3342559509.html">02|第一个Java程序</a></li>  <li class="file"><a href="/post/3119976000.html">03|Java程序基本结构</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            02-基本数据类型
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/860253879.html">01|变量和数据类型</a></li>  <li class="file"><a href="/post/117828488.html">02|基本数据类型的说明</a></li>  <li class="file"><a href="/post/3158030992.html">04|浮点型</a></li>  <li class="file"><a href="/post/3819373199.html">06|字符类型</a></li>  <li class="file"><a href="/post/2916864214.html">07|引用类型和常量</a></li>  <li class="file"><a href="/post/677245709.html">05|布尔类型</a></li>  <li class="file"><a href="/post/3232286694.html">03|整型</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            03-运算
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/2897062313.html">01|整数运算</a></li>  <li class="file"><a href="/post/2719730562.html">02|浮点数运算</a></li>  <li class="file"><a href="/post/1318299933.html">03|布尔运算</a></li>  <li class="file"><a href="/post/709319275.html">04|字符和字符串</a></li>  <li class="file"><a href="/post/3940022775.html">05|数组类型</a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                     </ul> 
+    </div>
+    <script>
+        $(document).ready(function() {
+            var iconFolderOpenClass  = 'fa-folder-open';
+            var iconFolderCloseClass = 'fa-folder';
+            var iconAllExpandClass = 'fa-angle-double-down';
+            var iconAllPackClass = 'fa-angle-double-up';
+            // Handle directory-tree expansion:
+            // 左键单独展开目录
+            $(document).on('click', '#categories a[data-role="directory"]', function (event) {
+                event.preventDefault();
+
+                var icon = $(this).children('.fa');
+                var expanded = icon.hasClass(iconFolderOpenClass);
+                var subtree = $(this).siblings('ul');
+                icon.removeClass(iconFolderOpenClass).removeClass(iconFolderCloseClass);
+                if (expanded) {
+                    if (typeof subtree != 'undefined') {
+                        subtree.slideUp({ duration: 100 });
+                    }
+                    icon.addClass(iconFolderCloseClass);
+                } else {
+                    if (typeof subtree != 'undefined') {
+                        subtree.slideDown({ duration: 100 });
+                    }
+                    icon.addClass(iconFolderOpenClass);
+                }
+            });
+            // 右键展开下属所有目录
+            $('#categories a[data-role="directory"]').bind("contextmenu", function(event){
+                event.preventDefault();
+                
+                var icon = $(this).children('.fa');
+                var expanded = icon.hasClass(iconFolderOpenClass);
+                var listNode = $(this).siblings('ul');
+                var subtrees = $.merge(listNode.find('li ul'), listNode);
+                var icons = $.merge(listNode.find('.fa'), icon);
+                icons.removeClass(iconFolderOpenClass).removeClass(iconFolderCloseClass);
+                if(expanded) {
+                    subtrees.slideUp({ duration: 100 });
+                    icons.addClass(iconFolderCloseClass);
+                } else {
+                    subtrees.slideDown({ duration: 100 });
+                    icons.addClass(iconFolderOpenClass);
+                }
+            })
+            // 展开关闭所有目录按钮
+            $(document).on('click', '#allExpand', function (event) {
+                event.preventDefault();
+                
+                var icon = $(this).children('.fa');
+                var expanded = icon.hasClass(iconAllExpandClass);
+                icon.removeClass(iconAllExpandClass).removeClass(iconAllPackClass);
+                if(expanded) {
+                    $('#sidebar .fa.fa-folder').removeClass('fa-folder').addClass('fa-folder-open')
+                    $('#categories li ul').slideDown({ duration: 100 });
+                    icon.addClass(iconAllPackClass);
+                } else {
+                    $('#sidebar .fa.fa-folder-open').removeClass('fa-folder-open').addClass('fa-folder')
+                    $('#categories li ul').slideUp({ duration: 100 });
+                    icon.addClass(iconAllExpandClass);
+                }
+            });  
+        });
+    </script>
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+            
+            <section id="main"><article id="post-编程语言/PHP/PHP的垃圾回收机制-性能方面考虑的因素" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+                    <div class="article-meta">
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/">编程语言</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/PHP/">PHP</a>
+    </div>
+
+                        
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/post/2943915566.html">
+            <time datetime="2021-07-26T03:23:17.288Z" itemprop="datePublished">2021-07-26</time>
+        </a>
+    </div>
+
+
+                        
+                            <i class="fa fa-bar-chart"></i>
+                            <span id="busuanzi_container_site_pv"><span id="busuanzi_value_page_pv"></span></span>    
+                        
+                        
+                            <div class="article-meta-button">
+                                <a target="_blank" rel="noopener" href='https://github.com/dd-code-site/blog/raw/main/source/_posts/编程语言/PHP/PHP的垃圾回收机制-性能方面考虑的因素.md'> Source </a>
+                            </div>
+                            <div class="article-meta-button">
+                                <a target="_blank" rel="noopener" href='https://github.com/dd-code-site/blog/edit/main/source/_posts/编程语言/PHP/PHP的垃圾回收机制-性能方面考虑的因素.md'> Edit </a>
+                            </div>
+                            <div class="article-meta-button">
+                                <a target="_blank" rel="noopener" href='https://github.com/dd-code-site/blog/commits/main/source/_posts/编程语言/PHP/PHP的垃圾回收机制-性能方面考虑的因素.md'> History </a>
+                            </div>
+                        
+                    </div>
+                
+                
+    
+        <h1 class="article-title" itemprop="name">
+            PHP的垃圾回收机制-性能方面考虑的因素
+        </h1>
+    
+
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+        
+            
+        
+        
+            <h2 id="性能方面考虑的因素"><a href="#性能方面考虑的因素" class="headerlink" title="性能方面考虑的因素"></a>性能方面考虑的因素</h2><p>在上一节我们已经简单的提到：回收可能根有细微的性能上影响，但这是把PHP 5.2与PHP 5.3比较时才有的。尽管在PHP 5.2中，记录可能根相对于完全不记录可能根要慢些，而PHP 5.3中对 PHP run-time 的其他修改减少了这个性能损失。</p>
+<p>这里主要有两个领域对性能有影响。第一个是内存占用空间的节省，另一个是垃圾回收机制执行内存清理时的执行时间增加(run-time delay)。我们将研究这两个领域。</p>
+<h3 id="内存占用空间的节省"><a href="#内存占用空间的节省" class="headerlink" title="内存占用空间的节省"></a>内存占用空间的节省</h3><p>首先，实现垃圾回收机制的整个原因是为了，一旦先决条件满足，通过清理循环引用的变量来节省内存占用。在PHP执行中，一旦根缓冲区满了或者调用<a target="_blank" rel="noopener" href="https://www.php.net/manual/zh/function.gc-collect-cycles.php">gc_collect_cycles()</a> 函数时，就会执行垃圾回收。在下图中，显示了下面脚本分别在PHP 5.2 和 PHP 5.3环境下的内存占用情况，其中排除了脚本启动时PHP本身占用的基本内存。</p>
+<p><strong>Example #1 Memory usage example</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Foo</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="variable">$var</span> = <span class="string">&#x27;3.1415962654&#x27;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable">$baseMemory</span> = memory_get_usage();</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> ( <span class="variable">$i</span> = <span class="number">0</span>; <span class="variable">$i</span> &lt;= <span class="number">100000</span>; <span class="variable">$i</span>++ )</span><br><span class="line">&#123;</span><br><span class="line">    <span class="variable">$a</span> = <span class="keyword">new</span> Foo;</span><br><span class="line">    <span class="variable">$a</span>-&gt;self = <span class="variable">$a</span>;</span><br><span class="line">    <span class="keyword">if</span> ( <span class="variable">$i</span> % <span class="number">500</span> === <span class="number">0</span> )</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">echo</span> sprintf( <span class="string">&#x27;%8d: &#x27;</span>, <span class="variable">$i</span> ), memory_get_usage() - <span class="variable">$baseMemory</span>, <span class="string">&quot;\n&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://www.php.net/manual/zh/images/12f37b1c6963c1c5c18f30495416a197-gc-benchmark.png" alt="Comparison of memory usage between PHP 5.2 and PHP 5.3"></p>
+<p>在这个很理论性的例子中，我们创建了一个对象，这个对象中的一个属性被设置为指回对象本身。在循环的下一个重复(iteration)中，当脚本中的变量被重新复制时，就会发生典型性的内存泄漏。在这个例子中，两个变量容器是泄漏的(对象容器和属性容器)，但是仅仅能找到一个可能根：就是被unset的那个变量。在10,000次重复后(也就产生总共10,000个可能根)，当根缓冲区满时，就执行垃圾回收机制，并且释放那些关联的可能根的内存。这从PHP 5.3的锯齿型内存占用图中很容易就能看到。每次执行完10,000次重复后，执行垃圾回收，并释放相关的重复使用的引用变量。在这个例子中由于泄漏的数据结构非常简单，所以垃圾回收机制本身不必做太多工作。从这个图表中，你能看到 PHP 5.3的最大内存占用大概是9 Mb，而PHP 5.2的内存占用一直增加。</p>
+<h3 id="执行时间增加-Run-Time-Slowdowns"><a href="#执行时间增加-Run-Time-Slowdowns" class="headerlink" title="执行时间增加(Run-Time Slowdowns)"></a>执行时间增加(Run-Time Slowdowns)</h3><p>垃圾回收影响性能的第二个领域是它释放已泄漏的内存耗费的时间。为了看到这个耗时时多少，我们稍微改变了上面的脚本，有更多次数的重复并且删除了循环中的内存占用计算，第二个脚本代码如下：</p>
+<p><strong>Example #2 GC性能影响</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Foo</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="variable">$var</span> = <span class="string">&#x27;3.1415962654&#x27;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> ( <span class="variable">$i</span> = <span class="number">0</span>; <span class="variable">$i</span> &lt;= <span class="number">1000000</span>; <span class="variable">$i</span>++ )</span><br><span class="line">&#123;</span><br><span class="line">    <span class="variable">$a</span> = <span class="keyword">new</span> Foo;</span><br><span class="line">    <span class="variable">$a</span>-&gt;self = <span class="variable">$a</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">echo</span> memory_get_peak_usage(), <span class="string">&quot;\n&quot;</span>;</span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>我们将运行这个脚本两次，一次通过配置<strong>zend.enable_gc</strong>打开垃圾回收机制时，另一次是它关闭时。</p>
+<p><strong>Example #3 执行以上脚本</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">time php -dzend.enable_gc=0 -dmemory_limit=-1 -n example2.php</span><br><span class="line"><span class="meta">#</span><span class="bash"> and</span></span><br><span class="line">time php -dzend.enable_gc=1 -dmemory_limit=-1 -n example2.php</span><br></pre></td></tr></table></figure>
+
+<p>在我的机器上，第一个命令持续执行时间大概为10.7秒，而第二个命令耗费11.4秒。时间上增加了7%。然而，执行这个脚本时内存占用的峰值降低了98%，从931Mb 降到 10Mb。这个基准不是很科学，或者并不能代表真实应用程序的数据，但是它的确显示了垃圾回收机制在内存占用方面的好处。好消息就是，对这个脚本而言，在执行中出现更多的循环引用变量时，内存节省的更多的情况下，每次时间增加的百分比都是7%。</p>
+<h3 id="PHP内部-GC-统计信息"><a href="#PHP内部-GC-统计信息" class="headerlink" title="PHP内部 GC 统计信息"></a>PHP内部 GC 统计信息</h3><p>在PHP内部，可以显示更多的关于垃圾回收机制如何运行的信息。但是要显示这些信息，你需要先重新编译PHP使benchmark和data-collecting code可用。你需要在按照你的意愿运行<code>./configure</code>前，把环境变量<code>CFLAGS</code>设置成<code>-DGC_BENCH=1</code>。下面的命令串就是做这个事：</p>
+<p><strong>Example #4 重新编译PHP以启用GC benchmarking</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">export CFLAGS=-DGC_BENCH=1</span><br><span class="line">./config.nice</span><br><span class="line">make clean</span><br><span class="line">make</span><br></pre></td></tr></table></figure>
+
+<p>当你用新编译的PHP二进制文件来重新执行上面的例子代码，在PHP执行结束后，你将看到下面的信息：</p>
+<p><strong>Example #5 GC 统计数据</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">GC Statistics</span><br><span class="line">-------------</span><br><span class="line">Runs:               110</span><br><span class="line">Collected:          2072204</span><br><span class="line">Root buffer length: 0</span><br><span class="line">Root buffer peak:   10000</span><br><span class="line"></span><br><span class="line">      Possible            Remove from  Marked</span><br><span class="line">        Root    Buffered     buffer     grey</span><br><span class="line">      --------  --------  -----------  ------</span><br><span class="line">ZVAL   7175487   1491291    1241690   3611871</span><br><span class="line">ZOBJ  28506264   1527980     677581   1025731</span><br></pre></td></tr></table></figure>
+
+<p>主要的信息统计在第一个块。你能看到垃圾回收机制运行了110次，而且在这110次运行中，总共有超过两百万的内存分配被释放。只要垃圾回收机制运行了至少一次，根缓冲区峰值(Root buffer peak)总是10000.</p>
+<h3 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h3><p>通常，PHP中的垃圾回收机制，仅仅在循环回收算法确实运行时会有时间消耗上的增加。但是在平常的(更小的)脚本中应根本就没有性能影响。</p>
+<p>然而，在平常脚本中有循环回收机制运行的情况下，内存的节省将允许更多这种脚本同时运行在你的服务器上。因为总共使用的内存没达到上限。</p>
+<p>这种好处在长时间运行脚本中尤其明显，诸如长时间的测试套件或者daemon脚本此类。同时，对通常比Web脚本运行时间长的<a target="_blank" rel="noopener" href="http://gtk.php.net/">» PHP-GTK</a>应用程序，新的垃圾回收机制，应该会大大改变一直以来认为内存泄漏问题难以解决的看法。</p>
+
+            </div>
+        
+        <footer class="article-footer">
+        </footer>
+    </div>
+</article>
+
+
+    
+<nav id="article-nav">
+    
+        <a href="/post/2776614029.html" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">Newer</strong>
+            <div class="article-nav-title">
+                
+                    PHP的垃圾回收机制-引用计数
+                
+            </div>
+        </a>
+    
+    
+        <a href="/post/2916108243.html" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">Older</strong>
+            <div class="article-nav-title">PHP控制反转（IOC）和依赖注入（DI）</div>
+        </a>
+    
+</nav>
+
+
+
+
+
+    
+    
+
+
+
+
+<!-- baidu url auto push script -->
+<script type="text/javascript">
+    !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=window.location.href,o=document.referrer;if(!e.test(r)){var n="//api.share.baidu.com/s.gif";o?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var t=new Image;t.src=n}}(window);
+</script>     
+</section>
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            Dawson Liu &copy; 2021 
+            <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/80x15.png" /></a>
+            <br> Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme - <a target="_blank" rel="noopener" href="https://github.com/zthxxx/hexo-theme-Wikitten">wikitten</a>
+            
+                <br>
+                <span id="busuanzi_container_site_pv"><i class="fa fa-eye"></i> <span id="busuanzi_value_site_pv"></span></span>
+                &nbsp;|&nbsp;
+                <span id="busuanzi_container_site_pv"><i class="fa fa-user"></i> <span id="busuanzi_value_site_uv"></span></span>
+            
+        </div>
+    </div>
+</footer>
+
+        
+
+    
+        
+<script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-share.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-video.min.js"></script>
+
+    
+    
+        
+<script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+
+    
+    
+        <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true,
+            TeX: {
+                equationNumbers: {
+                  autoNumber: 'AMS'
+                }
+            }
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script async src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+
+<script src="/js/main.js"></script>
+
+
+    </div>
+</body>
+</html>

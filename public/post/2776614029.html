@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+    <meta charset="utf-8">
+    
+    <title>PHP的垃圾回收机制-引用计数 | Coding花园</title>
+    
+    
+        <meta name="keywords" content="PHP的垃圾回收机制-引用计数" />
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="引用计数基本知识每个php变量存在一个叫”zval”的变量容器中。一个zval变量容器，除了包含变量的类型和值，还包括两个字节的额外信息。第一个是”is_ref”，是个bool值，用来标识这个变量是否是属于引用集合(reference set)。通过这个字节，php引擎才能把普通变量和引用变量区分开来，由于php允许用户通过使用&amp;来使用自定义引用，zval变量容器中还有一个内部引用计数机制">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PHP的垃圾回收机制-引用计数">
+<meta property="og:url" content="https://dd-code.site/post/2776614029.html">
+<meta property="og:site_name" content="Coding花园">
+<meta property="og:description" content="引用计数基本知识每个php变量存在一个叫”zval”的变量容器中。一个zval变量容器，除了包含变量的类型和值，还包括两个字节的额外信息。第一个是”is_ref”，是个bool值，用来标识这个变量是否是属于引用集合(reference set)。通过这个字节，php引擎才能把普通变量和引用变量区分开来，由于php允许用户通过使用&amp;来使用自定义引用，zval变量容器中还有一个内部引用计数机制">
+<meta property="og:locale">
+<meta property="og:image" content="https://www.php.net/manual/zh/images/12f37b1c6963c1c5c18f30495416a197-simple-array.png">
+<meta property="og:image" content="https://www.php.net/manual/zh/images/12f37b1c6963c1c5c18f30495416a197-simple-array2.png">
+<meta property="og:image" content="https://www.php.net/manual/zh/images/12f37b1c6963c1c5c18f30495416a197-loop-array.png">
+<meta property="og:image" content="https://www.php.net/manual/zh/images/12f37b1c6963c1c5c18f30495416a197-leak-array.png">
+<meta property="article:published_time" content="2021-07-26T03:23:17.288Z">
+<meta property="article:modified_time" content="2021-08-10T15:52:24.851Z">
+<meta property="article:author" content="Dawson Liu">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.php.net/manual/zh/images/12f37b1c6963c1c5c18f30495416a197-simple-array.png">
+    
+
+    
+        <link rel="alternate" href="/atom.xml" title="Coding花园" type="application/atom+xml" />
+    
+
+    
+        <link rel="icon" href="/favicon.ico" />
+    
+
+    
+<link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+
+    
+<link rel="stylesheet" href="/libs/open-sans/styles.css">
+
+    
+<link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+
+    
+<script src="/libs/jquery/plugins/cookie/1.4.1/jquery.cookie.js"></script>
+
+    
+    
+        
+<link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+
+    
+    
+        
+<link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+
+    
+    
+    
+    
+
+
+    
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">Coding花园</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/">首页</a>
+                
+                    <a class="main-nav-link" href="/tags">标签</a>
+                
+                    <a class="main-nav-link" href="/archives">归档</a>
+                
+            </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="Type something..." />
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/">首页</a></td>
+                
+                    <td><a class="main-nav-link" href="/tags">标签</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">归档</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search" />
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+            
+                <aside id="sidebar">
+   
+        
+    <div class="widget-wrap" id='categories'>
+        <h3 class="widget-title">
+            <span>categories</span>
+            &nbsp;
+            <a id='allExpand' href="#">
+                <i class="fa fa-angle-double-down fa-2x"></i>
+            </a>
+        </h3>
+        
+        
+        
+         <ul class="unstyled" id="tree" > 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            分享收藏
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/2127643338.html">不错的在线学习平台</a></li>  <li class="file"><a href="/post/659461921.html">Go进阶训练营课程大纲学习体系</a></li>  <li class="file"><a href="/post/1891777730.html">高级 Go 工程师岗位职责</a></li>  <li class="file"><a href="/post/1354050835.html">豆瓣电影 Top250 榜单</a></li>  <li class="file"><a href="/post/2127643338.html">不错的在线学习平台</a></li>  <li class="file"><a href="/post/1628566266.html">优秀的博主站点</a></li>  <li class="file"><a href="/post/651811465.html">架构图模板</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            技术学习
+                        </a>
+                         <ul class="unstyled" id="tree" > 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            Docker
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/2104589309.html">Docker命令详解（run篇）</a></li>  <li class="file"><a href="/post/564644262.html">Docker相关命令</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            LeetCode
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/3220316175.html">一个很好地leetcode项目</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            Mongo
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/1691421171.html">mongo常用命令</a></li>  <li class="file"><a href="/post/1323723771.html">mongo数据库角色</a></li>  <li class="file"><a href="/post/3140326379.html">mongo新建用户</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            MySQL
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/4025057969.html">MyISAM和InnoDB的区别</a></li>  <li class="file"><a href="/post/748313607.html">MySQL优化</a></li>  <li class="file"><a href="/post/1213461122.html">MySQL千万级大数据量查询优化</a></li>  <li class="file"><a href="/post/1724192415.html">MySQL基础-小数类型</a></li>  <li class="file"><a href="/post/1988337205.html">MySQL基础-整数类型</a></li>  <li class="file"><a href="/post/445316081.html">MySQL常见问题</a></li>  <li class="file"><a href="/post/961775144.html">MySQL查询重复的数据</a></li>  <li class="file"><a href="/post/70487411.html">MySQL索引和存储引擎</a></li>  <li class="file"><a href="/post/548465112.html">MySQL索引失效情况</a></li>  <li class="file"><a href="/post/1647528259.html">MySQL索引类型</a></li>  <li class="file"><a href="/post/1868093003.html">事务的四个特性</a></li>  <li class="file"><a href="/post/2178661577.html">使用MySqlDump备份</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            Oracle
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/1452475922.html">Centos7下Oracle19c的安装</a></li>  <li class="file"><a href="/post/3032572741.html">docker安装oracle19c</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            Redis
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/295621084.html">Redis持久化</a></li>  <li class="file"><a href="/post/1349846639.html">Redis数据类型比较和使用场景</a></li>  <li class="file"><a href="/post/1685059487.html">Redis设置密码</a></li>  <li class="file"><a href="/post/1058490118.html">安装SSDB</a></li>  <li class="file"><a href="/post/1099414406.html">了解Redis</a></li>  <li class="file"><a href="/post/894376550.html">缓存Memcache和Redis的区别</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            Service
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/82110573.html">linux系统scp文件传输</a></li>  <li class="file"><a href="/post/1879866913.html">Ubuntu防火墙的使用和开放关闭端口</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            数据库
+                        </a>
+                         <ul class="unstyled" id="tree" > 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            Memcache
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/2253204330.html">了解Memcache</a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            算法
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/2235748871.html">冒泡排序解析</a></li>  <li class="file"><a href="/post/1591159457.html">c1</a></li>  <li class="file"><a href="/post/3516134866.html">国外一个学习算法很好的网站</a></li>  <li class="file"><a href="/post/1991213779.html">两两对比算法</a></li>  <li class="file"><a href="/post/2235748871.html">冒泡排序解析</a></li>  <li class="file"><a href="/post/1898961614.html">编码-冒泡排序</a></li>  <li class="file"><a href="/post/73634619.html">检查给定数组是否成对排序</a></li>  <li class="file"><a href="/post/2412115213.html">快速排序解析</a></li>  <li class="file"><a href="/post/570953535.html">编码-快排算法</a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            每日一课
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/2648367562.html">2019年必学的DevOps流行工具</a></li>  <li class="file"><a href="/post/3792249270.html">二维码扫描登录是什么原理</a></li>  <li class="file"><a href="/post/495014278.html">如何快速对应用系统做一个360度的画像诊断</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory open">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder-open"></i>
+                            &nbsp;
+                            编程语言
+                        </a>
+                         <ul class="unstyled" id="tree" > 
+                    <li class="directory open">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder-open"></i>
+                            &nbsp;
+                            PHP
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/1171510126.html">PHP-FPM是什么</a></li>  <li class="file"><a href="/post/4276646924.html">PHP-FPM的三种运行模式</a></li>  <li class="file"><a href="/post/2140386669.html">PHP 中self、static、$this的区别&后期静态绑定详解</a></li>  <li class="file"><a href="/post/886155297.html">PHP基础-数据类型-boolean</a></li>  <li class="file"><a href="/post/4235469996.html">PHP基础-数据类型-float</a></li>  <li class="file"><a href="/post/3247369179.html">PHP基础-数据类型-string</a></li>  <li class="file"><a href="/post/221785719.html">PHP基础-数据类型-integet</a></li>  <li class="file"><a href="/post/740536292.html">PHP基础-数据类型-string和int比较</a></li>  <li class="file"><a href="/post/2518559853.html">PHP基础-数据类型</a></li>  <li class="file"><a href="/post/1503101483.html">PHP字符串函数</a></li>  <li class="file"><a href="/post/2916108243.html">PHP控制反转（IOC）和依赖注入（DI）</a></li>  <li class="file"><a href="/post/1247192045.html">PHP的垃圾回收机制-回收周期</a></li>  <li class="file active"><a href="/post/2776614029.html">PHP的垃圾回收机制-引用计数</a></li>  <li class="file"><a href="/post/2943915566.html">PHP的垃圾回收机制-性能方面考虑的因素</a></li>  <li class="file"><a href="/post/512206887.html">PHP的垃圾回收机制</a></li>  <li class="file"><a href="/post/3981571320.html">PHP自动加载机制</a></li>  <li class="file"><a href="/post/137484498.html">self和$this的区别</a></li>  <li class="file"><a href="/post/2844724790.html">在Mac上使用Homebrew升级到PHP7.4</a></li>  <li class="file"><a href="/post/3712615104.html">如何使用brew安装多个PHP版本</a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            自考提升
+                        </a>
+                         <ul class="unstyled" id="tree" > 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            网络经济与企业管理
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/701979186.html">《网络经济与企业管理》第一次课</a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            课程学习
+                        </a>
+                         <ul class="unstyled" id="tree" > 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            22讲通关Go语言
+                        </a>
+                         <ul class="unstyled" id="tree" > 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            00-开篇词
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/188254796.html">开篇词</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            01-Go语言快速入门
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/1719467524.html">01 | 基础入门：编写你的第一个 Go 语言程序</a></li>  <li class="file"><a href="/post/239718908.html">04 | 数据类型：查找字符串</a></li>  <li class="file"><a href="/post/3069556377.html">03 | 数据类型：字符串和数字</a></li>  <li class="file"><a href="/post/2755664247.html">02 | 数据类型：变量的声明</a></li>  <li class="file"><a href="/post/1632346433.html">05 | 控制结构：If 条件语句</a></li>  <li class="file"><a href="/post/1946029743.html">06 | 控制结构：switch 选择语句</a></li>  <li class="file"><a href="/post/3410127306.html">07 | 控制结构：for 循环语句</a></li>  <li class="file"><a href="/post/1956865009.html">08 | 集合类型：Array（数组）</a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            廖雪峰的Java教程
+                        </a>
+                         <ul class="unstyled" id="tree" > 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            00-开篇词
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/188254797.html">开篇词</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            01-Java基础
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/2622184687.html">01|Java简介</a></li>  <li class="file"><a href="/post/3342559509.html">02|第一个Java程序</a></li>  <li class="file"><a href="/post/3119976000.html">03|Java程序基本结构</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            02-基本数据类型
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/860253879.html">01|变量和数据类型</a></li>  <li class="file"><a href="/post/117828488.html">02|基本数据类型的说明</a></li>  <li class="file"><a href="/post/3158030992.html">04|浮点型</a></li>  <li class="file"><a href="/post/3819373199.html">06|字符类型</a></li>  <li class="file"><a href="/post/2916864214.html">07|引用类型和常量</a></li>  <li class="file"><a href="/post/677245709.html">05|布尔类型</a></li>  <li class="file"><a href="/post/3232286694.html">03|整型</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            03-运算
+                        </a>
+                         <ul class="unstyled" id="tree" >  <li class="file"><a href="/post/2897062313.html">01|整数运算</a></li>  <li class="file"><a href="/post/2719730562.html">02|浮点数运算</a></li>  <li class="file"><a href="/post/1318299933.html">03|布尔运算</a></li>  <li class="file"><a href="/post/709319275.html">04|字符和字符串</a></li>  <li class="file"><a href="/post/3940022775.html">05|数组类型</a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                     </ul> 
+    </div>
+    <script>
+        $(document).ready(function() {
+            var iconFolderOpenClass  = 'fa-folder-open';
+            var iconFolderCloseClass = 'fa-folder';
+            var iconAllExpandClass = 'fa-angle-double-down';
+            var iconAllPackClass = 'fa-angle-double-up';
+            // Handle directory-tree expansion:
+            // 左键单独展开目录
+            $(document).on('click', '#categories a[data-role="directory"]', function (event) {
+                event.preventDefault();
+
+                var icon = $(this).children('.fa');
+                var expanded = icon.hasClass(iconFolderOpenClass);
+                var subtree = $(this).siblings('ul');
+                icon.removeClass(iconFolderOpenClass).removeClass(iconFolderCloseClass);
+                if (expanded) {
+                    if (typeof subtree != 'undefined') {
+                        subtree.slideUp({ duration: 100 });
+                    }
+                    icon.addClass(iconFolderCloseClass);
+                } else {
+                    if (typeof subtree != 'undefined') {
+                        subtree.slideDown({ duration: 100 });
+                    }
+                    icon.addClass(iconFolderOpenClass);
+                }
+            });
+            // 右键展开下属所有目录
+            $('#categories a[data-role="directory"]').bind("contextmenu", function(event){
+                event.preventDefault();
+                
+                var icon = $(this).children('.fa');
+                var expanded = icon.hasClass(iconFolderOpenClass);
+                var listNode = $(this).siblings('ul');
+                var subtrees = $.merge(listNode.find('li ul'), listNode);
+                var icons = $.merge(listNode.find('.fa'), icon);
+                icons.removeClass(iconFolderOpenClass).removeClass(iconFolderCloseClass);
+                if(expanded) {
+                    subtrees.slideUp({ duration: 100 });
+                    icons.addClass(iconFolderCloseClass);
+                } else {
+                    subtrees.slideDown({ duration: 100 });
+                    icons.addClass(iconFolderOpenClass);
+                }
+            })
+            // 展开关闭所有目录按钮
+            $(document).on('click', '#allExpand', function (event) {
+                event.preventDefault();
+                
+                var icon = $(this).children('.fa');
+                var expanded = icon.hasClass(iconAllExpandClass);
+                icon.removeClass(iconAllExpandClass).removeClass(iconAllPackClass);
+                if(expanded) {
+                    $('#sidebar .fa.fa-folder').removeClass('fa-folder').addClass('fa-folder-open')
+                    $('#categories li ul').slideDown({ duration: 100 });
+                    icon.addClass(iconAllPackClass);
+                } else {
+                    $('#sidebar .fa.fa-folder-open').removeClass('fa-folder-open').addClass('fa-folder')
+                    $('#categories li ul').slideUp({ duration: 100 });
+                    icon.addClass(iconAllExpandClass);
+                }
+            });  
+        });
+    </script>
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+            
+            <section id="main"><article id="post-编程语言/PHP/PHP的垃圾回收机制-引用计数" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+                    <div class="article-meta">
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/">编程语言</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/PHP/">PHP</a>
+    </div>
+
+                        
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/post/2776614029.html">
+            <time datetime="2021-07-26T03:23:17.288Z" itemprop="datePublished">2021-07-26</time>
+        </a>
+    </div>
+
+
+                        
+                            <i class="fa fa-bar-chart"></i>
+                            <span id="busuanzi_container_site_pv"><span id="busuanzi_value_page_pv"></span></span>    
+                        
+                        
+                            <div class="article-meta-button">
+                                <a target="_blank" rel="noopener" href='https://github.com/dd-code-site/blog/raw/main/source/_posts/编程语言/PHP/PHP的垃圾回收机制-引用计数.md'> Source </a>
+                            </div>
+                            <div class="article-meta-button">
+                                <a target="_blank" rel="noopener" href='https://github.com/dd-code-site/blog/edit/main/source/_posts/编程语言/PHP/PHP的垃圾回收机制-引用计数.md'> Edit </a>
+                            </div>
+                            <div class="article-meta-button">
+                                <a target="_blank" rel="noopener" href='https://github.com/dd-code-site/blog/commits/main/source/_posts/编程语言/PHP/PHP的垃圾回收机制-引用计数.md'> History </a>
+                            </div>
+                        
+                    </div>
+                
+                
+    
+        <h1 class="article-title" itemprop="name">
+            PHP的垃圾回收机制-引用计数
+        </h1>
+    
+
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+        
+            
+        
+        
+            <h2 id="引用计数基本知识"><a href="#引用计数基本知识" class="headerlink" title="引用计数基本知识"></a>引用计数基本知识</h2><p>每个php变量存在一个叫”zval”的变量容器中。一个zval变量容器，除了包含变量的类型和值，还包括两个字节的额外信息。第一个是”is_ref”，是个bool值，用来标识这个变量是否是属于引用集合(reference set)。通过这个字节，php引擎才能把普通变量和引用变量区分开来，由于php允许用户通过使用&amp;来使用自定义引用，zval变量容器中还有一个内部引用计数机制，来优化内存使用。第二个额外字节是”refcount”，用以表示指向这个zval变量容器的变量(也称符号即symbol)个数。所有的符号存在一个符号表中，其中每个符号都有作用域(scope)，那些主脚本(比如：通过浏览器请求的的脚本)和每个函数或者方法也都有作用域。</p>
+<p>当一个变量被赋常量值时，就会生成一个zval变量容器，如下例这样：</p>
+<p><strong>Example #1 生成一个新的zval容器</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span><span class="variable">$a</span> = <span class="string">&quot;new string&quot;</span>;<span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>在上例中，新的变量<code>a</code>，是在当前作用域中生成的。并且生成了类型为 string 和值为<code>new string</code>的变量容器。在额外的两个字节信息中，”is_ref”被默认设置为 <strong><code>FALSE</code><strong>，因为没有任何自定义的引用生成。”refcount” 被设定为 <code>1</code>，因为这里只有一个变量使用这个变量容器. 注意到当”refcount”的值是<code>1</code>时，”is_ref”的值总是</strong><code>FALSE</code></strong>. 如果你已经安装了<a target="_blank" rel="noopener" href="http://xdebug.org/">» Xdebug</a>，你能通过调用函数 **xdebug_debug_zval()**显示”refcount”和”is_ref”的值。</p>
+<p><strong>Example #2 显示zval信息</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span>xdebug_debug_zval(<span class="string">&#x27;a&#x27;</span>);<span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>以上例程会输出：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">a: (refcount=<span class="number">1</span>, is_ref=<span class="number">0</span>)=<span class="string">&#x27;new string&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>把一个变量赋值给另一变量将增加引用次数(refcount).</p>
+<p><strong>Example #3 增加一个zval的引用计数</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span><span class="variable">$a</span> = <span class="string">&quot;new string&quot;</span>;<span class="variable">$b</span> = <span class="variable">$a</span>;xdebug_debug_zval( <span class="string">&#x27;a&#x27;</span> );<span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>以上例程会输出：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">a: (refcount=<span class="number">2</span>, is_ref=<span class="number">0</span>)=<span class="string">&#x27;new string&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>这时，引用次数是<code>2</code>，因为同一个变量容器被变量 a 和变量 b关联.当没必要时，php不会去复制已生成的变量容器。变量容器在”refcount“变成0时就被销毁. 当任何关联到某个变量容器的变量离开它的作用域(比如：函数执行结束)，或者对变量调用了函数 <a target="_blank" rel="noopener" href="https://www.php.net/manual/zh/function.unset.php">unset()</a>时，”refcount“就会减1，下面的例子就能说明:</p>
+<p><strong>Example #4 减少引用计数</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span><span class="variable">$a</span> = <span class="string">&quot;new string&quot;</span>;<span class="variable">$c</span> = <span class="variable">$b</span> = <span class="variable">$a</span>;xdebug_debug_zval( <span class="string">&#x27;a&#x27;</span> );<span class="keyword">unset</span>( <span class="variable">$b</span>, <span class="variable">$c</span> );xdebug_debug_zval( <span class="string">&#x27;a&#x27;</span> );<span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>以上例程会输出：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">a: (refcount=<span class="number">3</span>, is_ref=<span class="number">0</span>)=<span class="string">&#x27;new string&#x27;</span></span><br><span class="line">a: (refcount=<span class="number">1</span>, is_ref=<span class="number">0</span>)=<span class="string">&#x27;new string&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>如果我们现在执行 <code>unset($a);</code>，包含类型和值的这个变量容器就会从内存中删除。</p>
+<h3 id="复合类型-Compound-Types"><a href="#复合类型-Compound-Types" class="headerlink" title="复合类型(Compound Types)"></a>复合类型(Compound Types)</h3><p>当考虑像 array和object这样的复合类型时，事情就稍微有点复杂. 与 标量(scalar)类型的值不同，array和 object类型的变量把它们的成员或属性存在自己的符号表中。这意味着下面的例子将生成三个zval变量容器。</p>
+<p><strong>Example #5 Creating a array zval</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span><span class="variable">$a</span> = <span class="keyword">array</span>( <span class="string">&#x27;meaning&#x27;</span> =&gt; <span class="string">&#x27;life&#x27;</span>, <span class="string">&#x27;number&#x27;</span> =&gt; <span class="number">42</span> );xdebug_debug_zval( <span class="string">&#x27;a&#x27;</span> );<span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>以上例程的输出类似于：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">a: (refcount=<span class="number">1</span>, is_ref=<span class="number">0</span>)=<span class="keyword">array</span> (</span><br><span class="line">   <span class="string">&#x27;meaning&#x27;</span> =&gt; (refcount=<span class="number">1</span>, is_ref=<span class="number">0</span>)=<span class="string">&#x27;life&#x27;</span>,</span><br><span class="line">   <span class="string">&#x27;number&#x27;</span> =&gt; (refcount=<span class="number">1</span>, is_ref=<span class="number">0</span>)=<span class="number">42</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>图示:</p>
+<p><img src="https://www.php.net/manual/zh/images/12f37b1c6963c1c5c18f30495416a197-simple-array.png" alt="一个简单数组的zval"></p>
+<p>这三个zval变量容器是: a，meaning和 number。增加和减少”refcount”的规则和上面提到的一样. 下面, 我们在数组中再添加一个元素,并且把它的值设为数组中已存在元素的值:</p>
+<p><strong>Example #6 添加一个已经存在的元素到数组中</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span><span class="variable">$a</span> = <span class="keyword">array</span>( <span class="string">&#x27;meaning&#x27;</span> =&gt; <span class="string">&#x27;life&#x27;</span>, <span class="string">&#x27;number&#x27;</span> =&gt; <span class="number">42</span> );<span class="variable">$a</span>[<span class="string">&#x27;life&#x27;</span>] = <span class="variable">$a</span>[<span class="string">&#x27;meaning&#x27;</span>];xdebug_debug_zval( <span class="string">&#x27;a&#x27;</span> );<span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>以上例程的输出类似于：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">a: (refcount=<span class="number">1</span>, is_ref=<span class="number">0</span>)=<span class="keyword">array</span> (</span><br><span class="line">   <span class="string">&#x27;meaning&#x27;</span> =&gt; (refcount=<span class="number">2</span>, is_ref=<span class="number">0</span>)=<span class="string">&#x27;life&#x27;</span>,</span><br><span class="line">   <span class="string">&#x27;number&#x27;</span> =&gt; (refcount=<span class="number">1</span>, is_ref=<span class="number">0</span>)=<span class="number">42</span>,</span><br><span class="line">   <span class="string">&#x27;life&#x27;</span> =&gt; (refcount=<span class="number">2</span>, is_ref=<span class="number">0</span>)=<span class="string">&#x27;life&#x27;</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>图示：</p>
+<p><img src="https://www.php.net/manual/zh/images/12f37b1c6963c1c5c18f30495416a197-simple-array2.png" alt="带有引用的简单数组的zval"></p>
+<p>从以上的xdebug输出信息，我们看到原有的数组元素和新添加的数组元素关联到同一个”refcount”<code>2</code>的zval变量容器. 尽管 Xdebug的输出显示两个值为<code>&#39;life&#39;</code>的 zval 变量容器，其实是同一个。 函数**xdebug_debug_zval()**不显示这个信息，但是你能通过显示内存指针信息来看到。</p>
+<p>删除数组中的一个元素，就是类似于从作用域中删除一个变量. 删除后,数组中的这个元素所在的容器的“refcount”值减少，同样，当“refcount”为0时，这个变量容器就从内存中被删除，下面又一个例子可以说明：</p>
+<p><strong>Example #7 从数组中删除一个元素</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span><span class="variable">$a</span> = <span class="keyword">array</span>( <span class="string">&#x27;meaning&#x27;</span> =&gt; <span class="string">&#x27;life&#x27;</span>, <span class="string">&#x27;number&#x27;</span> =&gt; <span class="number">42</span> );<span class="variable">$a</span>[<span class="string">&#x27;life&#x27;</span>] = <span class="variable">$a</span>[<span class="string">&#x27;meaning&#x27;</span>];<span class="keyword">unset</span>( <span class="variable">$a</span>[<span class="string">&#x27;meaning&#x27;</span>], <span class="variable">$a</span>[<span class="string">&#x27;number&#x27;</span>] );xdebug_debug_zval( <span class="string">&#x27;a&#x27;</span> );<span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>以上例程的输出类似于：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">a: (refcount=<span class="number">1</span>, is_ref=<span class="number">0</span>)=<span class="keyword">array</span> (</span><br><span class="line">   <span class="string">&#x27;life&#x27;</span> =&gt; (refcount=<span class="number">1</span>, is_ref=<span class="number">0</span>)=<span class="string">&#x27;life&#x27;</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>现在，当我们添加一个数组本身作为这个数组的元素时，事情就变得有趣，下个例子将说明这个。例中我们加入了引用操作符，否则php将生成一个复制。</p>
+<p><strong>Example #8 把数组作为一个元素添加到自己</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span><span class="variable">$a</span> = <span class="keyword">array</span>( <span class="string">&#x27;one&#x27;</span> );<span class="variable">$a</span>[] =&amp; <span class="variable">$a</span>;xdebug_debug_zval( <span class="string">&#x27;a&#x27;</span> );<span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>以上例程的输出类似于：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">a: (refcount=<span class="number">2</span>, is_ref=<span class="number">1</span>)=<span class="keyword">array</span> (</span><br><span class="line">   <span class="number">0</span> =&gt; (refcount=<span class="number">1</span>, is_ref=<span class="number">0</span>)=<span class="string">&#x27;one&#x27;</span>,</span><br><span class="line">   <span class="number">1</span> =&gt; (refcount=<span class="number">2</span>, is_ref=<span class="number">1</span>)=...</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>图示：</p>
+<p><img src="https://www.php.net/manual/zh/images/12f37b1c6963c1c5c18f30495416a197-loop-array.png" alt="自引用(curcular reference,自己是自己的一个元素)的数组的zval"></p>
+<p>能看到数组变量 (a) 同时也是这个数组的第二个元素(1) 指向的变量容器中“refcount”为 <code>2</code>。上面的输出结果中的”…”说明发生了递归操作, 显然在这种情况下意味着”…”指向原始数组。</p>
+<p>跟刚刚一样，对一个变量调用unset，将删除这个符号，且它指向的变量容器中的引用次数也减1。所以，如果我们在执行完上面的代码后，对变量$a调用unset, 那么变量 $a 和数组元素 “1” 所指向的变量容器的引用次数减1, 从”2”变成”1”. 下例可以说明:</p>
+<p><strong>Example #9 Unsetting $a</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(refcount=<span class="number">1</span>, is_ref=<span class="number">1</span>)=<span class="keyword">array</span> (</span><br><span class="line">   <span class="number">0</span> =&gt; (refcount=<span class="number">1</span>, is_ref=<span class="number">0</span>)=<span class="string">&#x27;one&#x27;</span>,</span><br><span class="line">   <span class="number">1</span> =&gt; (refcount=<span class="number">1</span>, is_ref=<span class="number">1</span>)=...</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>图示：</p>
+<p><img src="https://www.php.net/manual/zh/images/12f37b1c6963c1c5c18f30495416a197-leak-array.png" alt="Zvals after removal of array with a circular reference demonstrating the memory leak"></p>
+<h3 id="清理变量容器的问题-Cleanup-Problems"><a href="#清理变量容器的问题-Cleanup-Problems" class="headerlink" title="清理变量容器的问题(Cleanup Problems)"></a>清理变量容器的问题(Cleanup Problems)</h3><p>尽管不再有某个作用域中的任何符号指向这个结构(就是变量容器)，由于数组元素“1”仍然指向数组本身，所以这个容器不能被清除 。因为没有另外的符号指向它，用户没有办法清除这个结构，结果就会导致内存泄漏。庆幸的是，php将在脚本执行结束时清除这个数据结构，但是在php清除之前，将耗费不少内存。如果你要实现分析算法，或者要做其他像一个子元素指向它的父元素这样的事情，这种情况就会经常发生。当然，同样的情况也会发生在对象上，实际上对象更有可能出现这种情况，因为对象总是隐式的被引用。</p>
+<p>如果上面的情况发生仅仅一两次倒没什么，但是如果出现几千次，甚至几十万次的内存泄漏，这显然是个大问题。这样的问题往往发生在长时间运行的脚本中，比如请求基本上不会结束的守护进程(deamons)或者单元测试中的大的套件(sets)中。后者的例子：在给巨大的eZ(一个知名的PHP Library) 组件库的模板组件做单元测试时，就可能会出现问题。有时测试可能需要耗用2GB的内存，而测试服务器很可能没有这么大的内存。</p>
+
+            </div>
+        
+        <footer class="article-footer">
+        </footer>
+    </div>
+</article>
+
+
+    
+<nav id="article-nav">
+    
+        <a href="/post/137484498.html" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">Newer</strong>
+            <div class="article-nav-title">
+                
+                    self和$this的区别
+                
+            </div>
+        </a>
+    
+    
+        <a href="/post/2943915566.html" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">Older</strong>
+            <div class="article-nav-title">PHP的垃圾回收机制-性能方面考虑的因素</div>
+        </a>
+    
+</nav>
+
+
+
+
+
+    
+    
+
+
+
+
+<!-- baidu url auto push script -->
+<script type="text/javascript">
+    !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=window.location.href,o=document.referrer;if(!e.test(r)){var n="//api.share.baidu.com/s.gif";o?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var t=new Image;t.src=n}}(window);
+</script>     
+</section>
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            Dawson Liu &copy; 2021 
+            <a rel="license noopener" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/80x15.png" /></a>
+            <br> Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>. Theme - <a target="_blank" rel="noopener" href="https://github.com/zthxxx/hexo-theme-Wikitten">wikitten</a>
+            
+                <br>
+                <span id="busuanzi_container_site_pv"><i class="fa fa-eye"></i> <span id="busuanzi_value_site_pv"></span></span>
+                &nbsp;|&nbsp;
+                <span id="busuanzi_container_site_pv"><i class="fa fa-user"></i> <span id="busuanzi_value_site_uv"></span></span>
+            
+        </div>
+    </div>
+</footer>
+
+        
+
+    
+        
+<script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-share.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-video.min.js"></script>
+
+    
+    
+        
+<script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+
+    
+    
+        <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true,
+            TeX: {
+                equationNumbers: {
+                  autoNumber: 'AMS'
+                }
+            }
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script async src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+
+<script src="/js/main.js"></script>
+
+
+    </div>
+</body>
+</html>
