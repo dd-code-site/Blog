@@ -1,13 +1,10 @@
 # Menus
 menu:
   首页: /
-#   课程学习: /categories/课程学习/
-#   分类: /categories
-#   每日一课: /categories/OneLesson/
-  标签: /tags
-#   分享: /categories/Share/
-#   关于: /about
   归档: /archives
+#   分类: /categories
+  标签: /tags
+  关于: /about
 
 # Customize
 customize:
@@ -15,15 +12,15 @@ customize:
         enabled: true
         width: 40
         height: 40
-        url: https://cdn.dd-code.site/PicGo/20210419135324.png
+        url: /logo.png
     profile:
         enabled: false # Whether to show profile bar
-        avatar: https://cdn.dd-code.site/PicGo/WechatIMG4.jpeg # css/images/avatar.png
-        gravatar: dawson2@qq.com # Gravatar email address, if you enable Gravatar, your avatar config will be overriden
-        author: DawsonLiu
+        avatar: # css/images/avatar.png
+        gravatar: zth_9451@qq.com # Gravatar email address, if you enable Gravatar, your avatar config will be overriden
+        author: zthxxx
         author_title: Designer & Programmer
-        location: Shenzhen, China
-        follow: https://github.com/dd-code-site/
+        location: Chengdu, China
+        follow: https://github.com/dd-code-site
     highlight: monokai
     sidebar: left # sidebar position, options: left, right
     category_perExpand: false # enable article categories list per expanding
@@ -31,9 +28,9 @@ customize:
     favicon: /favicon.ico # path to favicon
     default_index_file: index.md # if this, it will display at site index instead of default index page
     social_links:
-        github: https://github.com/zthxxx/zthxxx.github.io
-        stack-overflow: http://stackoverflow.com/users/7277090/zthxxx?tab=profile
-        codepen: http://codepen.io/zthxxx/
+        github: https://github.com/dd-code-site/coding-blog
+        stack-overflow: 
+        codepen: 
         rss: /atom.xml
     social_link_tooltip: true # enable the social link tooltip, options: true, false
 
@@ -61,15 +58,15 @@ search:
 
 # History version 
 history_control: # make you wiki has history version control in page
-    enable: true
+    enable: false
     server_link: https://github.com # recommend use GitHub https://github.com
     user: dd-code-site
-    repertory: blog
-    branch: main
+    repertory: 
+    branch: 
 
 # Comment
 comment:
-    disqus: # enter disqus shortname here【dd-code-site】
+    disqus: # enter disqus shortname here
     duoshuo: # enter duoshuo shortname here
     youyan: # enter youyan uid here
 
